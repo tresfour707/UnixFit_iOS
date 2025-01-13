@@ -8,6 +8,8 @@
 import UIKit
 
 final class MachineListCell: UITableViewCell {
+    static let identifier = String(describing: type(of: MachineListCell.self))
+
     private lazy var titleLabel = UILabel()
 
     // MARK: - Initialization
@@ -22,7 +24,7 @@ final class MachineListCell: UITableViewCell {
     }
 
     // MARK: - Public methods
-    private func update(title: String) {
+    func update(title: String?) {
         titleLabel.text = title
     }
 

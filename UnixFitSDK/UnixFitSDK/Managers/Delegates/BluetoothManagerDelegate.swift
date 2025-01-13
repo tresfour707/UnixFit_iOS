@@ -8,5 +8,10 @@
 import Foundation
 
 public protocol BluetoothManagerDelegate: AnyObject {
-    
+    func bluetoothManagerDidFail(with error: BluetoothError)
+    func bluetoothManagerDidReadyStateSwitched(_ isReady: Bool)
+    func bluetoothManagerDidDiscover(peripheralModel: PeripheralModel)
+    func bluetoothManagerDidConnectToPeripheral(with peripheralModel: PeripheralModel)
+    func bluetoothManagerDidDisconnectPeripheral(_ peripheralModel: PeripheralModel)
+    func bluetoothManagerDidFailToConnectPeripheral(_ peripheralModel: PeripheralModel, error: Error?)
 }

@@ -8,7 +8,6 @@
 import CoreBluetooth
 
 extension SessionManager: CBPeripheralDelegate {
-
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         print("[CBPeripheralDelegate] did discover FTMS service", peripheral.services!)
         let service = peripheral.services![0]
