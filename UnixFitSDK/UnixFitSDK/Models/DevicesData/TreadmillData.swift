@@ -26,26 +26,26 @@ struct TreadmillDataOptions: OptionSet {
     static let steps = TreadmillDataOptions(rawValue: 1 << 13)
 }
 
-struct TreadmillRawData {
-    var instantaneousSpeed: UInt16?
-    var averageSpeed: UInt16?
-    var totalDistance: UInt32?
-    var inclination: Int16?
-    var rampAngleSetting: Int16?
-    var positiveElevationGain: UInt16?
-    var negativeElevationGain: UInt16?
-    var instantaneousPace: UInt8?
-    var averagePace: UInt8?
-    var totalEnergy: UInt16?
-    var energyPerHour: UInt16?
-    var energyPerMinute: UInt8?
-    var heartRate: UInt8?
-    var metabolicEquivalent: UInt8?
-    var elapsedTime: UInt16?
-    var remainingTime: UInt16?
-    var forceOnBelt: Int16?
-    var powerOutput: Int16?
-    var steps: UInt32?
+public struct TreadmillRawData {
+    public var instantaneousSpeed: UInt16?
+    public var averageSpeed: UInt16?
+    public var totalDistance: UInt32?
+    public var inclination: Int16?
+    public var rampAngleSetting: Int16?
+    public var positiveElevationGain: UInt16?
+    public var negativeElevationGain: UInt16?
+    public var instantaneousPace: UInt8?
+    public var averagePace: UInt8?
+    public var totalEnergy: UInt16?
+    public var energyPerHour: UInt16?
+    public var energyPerMinute: UInt8?
+    public var heartRate: UInt8?
+    public var metabolicEquivalent: UInt8?
+    public var elapsedTime: UInt16?
+    public var remainingTime: UInt16?
+    public var forceOnBelt: Int16?
+    public var powerOutput: Int16?
+    public var steps: UInt32?
 }
 
 extension TreadmillRawData {

@@ -25,23 +25,23 @@ struct RowerDataOptions: OptionSet {
     static let remainingTime = RowerDataOptions(rawValue: 1 << 12)
 }
 
-struct RowerRawData {
-    var strokeRate: UInt8?
-    var strokeCount: UInt16?
-    var averageStrokeRate: UInt8?
-    var totalDistance: UInt32?
-    var instantaneousPace: UInt16?
-    var averagePace: UInt16?
-    var instantaneousPower: Int16?
-    var averagePower: Int16?
-    var resistanceLevel: Int16?
-    var totalEnergy: UInt16?
-    var energyPerHour: UInt16?
-    var energyPerMinute: UInt8?
-    var heartRate: UInt8?
-    var metabolicEquivalent: UInt8?
-    var elapsedTime: UInt16?
-    var remainingTime: UInt16?
+public struct RowerRawData {
+    public var strokeRate: UInt8?
+    public var strokeCount: UInt16?
+    public var averageStrokeRate: UInt8?
+    public var totalDistance: UInt32?
+    public var instantaneousPace: UInt16?
+    public var averagePace: UInt16?
+    public var instantaneousPower: Int16?
+    public var averagePower: Int16?
+    public var resistanceLevel: Int16?
+    public var totalEnergy: UInt16?
+    public var energyPerHour: UInt16?
+    public var energyPerMinute: UInt8?
+    public var heartRate: UInt8?
+    public var metabolicEquivalent: UInt8?
+    public var elapsedTime: UInt16?
+    public var remainingTime: UInt16?
 }
 
 extension RowerRawData {

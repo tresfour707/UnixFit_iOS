@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CommandType: UInt8 {
+public enum CommandType: UInt8 {
     case requestControl = 0x00
     case reset = 0x01
     case setTargetSpeed = 0x02

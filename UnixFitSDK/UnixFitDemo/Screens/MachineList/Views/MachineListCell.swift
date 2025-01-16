@@ -31,12 +31,13 @@ final class MachineListCell: UITableViewCell {
     // MARK: - Private methods
     private func setupViews() {
         addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(
             [
                 titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
-                titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 8.0),
+                titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0),
                 titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8.0),
-                titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 8.0)
+                titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8.0)
             ]
         )
     }

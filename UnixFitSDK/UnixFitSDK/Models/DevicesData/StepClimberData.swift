@@ -21,19 +21,19 @@ struct StepClimberDataOptions: OptionSet {
     static let remainingTime = StairClimberDataOptions(rawValue: 1 << 8)
 }
 
-struct StepClimberRawData {
-    var floorsCount: UInt16?
-    var stepCount: UInt16?
-    var stepPerMinute: UInt16?
-    var averageStepRate: UInt16?
-    var positiveElevationGain: UInt16?
-    var totalEnergy: UInt16?
-    var energyPerHour: UInt16?
-    var energyPerMinute: UInt8?
-    var heartRate: UInt8?
-    var metabolicEquivalent: UInt8?
-    var elapsedTime: UInt16?
-    var remainingTime: UInt16?
+public struct StepClimberRawData {
+    public var floorsCount: UInt16?
+    public var stepCount: UInt16?
+    public var stepPerMinute: UInt16?
+    public var averageStepRate: UInt16?
+    public var positiveElevationGain: UInt16?
+    public var totalEnergy: UInt16?
+    public var energyPerHour: UInt16?
+    public var energyPerMinute: UInt8?
+    public var heartRate: UInt8?
+    public var metabolicEquivalent: UInt8?
+    public var elapsedTime: UInt16?
+    public var remainingTime: UInt16?
 }
 
 extension StepClimberRawData {

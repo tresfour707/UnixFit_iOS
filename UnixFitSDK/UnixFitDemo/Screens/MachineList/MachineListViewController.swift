@@ -11,6 +11,7 @@ import UnixFitSDK
 final class MachineListViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
 
@@ -24,6 +25,7 @@ final class MachineListViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupViews()
         setupManager()
     }
@@ -66,6 +68,25 @@ final class MachineListViewController: UIViewController {
     private func presentAlert(_ alert: UIAlertController) {
         present(alert, animated: true)
     }
+
+    private func openDetailScreen() {
+        let detailVC = MachineDetailViewController()
+        detailVC.activeSessionManager = bluetoothManager.activeSessionManager
+
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    private func reloadData() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+
+    private func stopAnimating() {
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+        }
+    }
 }
 
 extension MachineListViewController: BluetoothManagerDelegate {
@@ -102,20 +123,26 @@ extension MachineListViewController: BluetoothManagerDelegate {
     }
     
     func bluetoothManagerDidDiscover(peripheralModel: UnixFitSDK.PeripheralModel) {
-        tableView.reloadData()
+        reloadData()
     }
     
     func bluetoothManagerDidConnectToPeripheral(with peripheralModel: UnixFitSDK.PeripheralModel) {
-        activityIndicator.stopAnimating()
+        stopAnimating()
         bluetoothManager.stopScanningForPeripherals()
+        reloadData()
+        DispatchQueue.main.async {
+            self.openDetailScreen()
+        }
     }
     
     func bluetoothManagerDidDisconnectPeripheral(_ peripheralModel: UnixFitSDK.PeripheralModel) {
-        activityIndicator.stopAnimating()
+        stopAnimating()
+        reloadData()
     }
     
     func bluetoothManagerDidFailToConnectPeripheral(_ peripheralModel: UnixFitSDK.PeripheralModel, error: (any Error)?) {
-        activityIndicator.stopAnimating()
+        stopAnimating()
+        reloadData()
     }
 }
 
@@ -129,7 +156,9 @@ extension MachineListViewController: UITableViewDelegate, UITableViewDataSource 
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MachineListCell.identifier, for: indexPath) as? MachineListCell else {
             fatalError()
         }
-
+        if peripheralModel.id == bluetoothManager.activeSessionManager?.peripheralModel.id {
+            cell.backgroundColor = .green
+        }
         cell.update(title: peripheralModel.name)
 
         return cell
@@ -137,7 +166,15 @@ extension MachineListViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let peripheralModel = bluetoothManager.peripheralModels[indexPath.row]
-        bluetoothManager.connect(to: peripheralModel)
-        activityIndicator.startAnimating()
+
+        if peripheralModel.id == bluetoothManager.activeSessionManager?.peripheralModel.id {
+            openDetailScreen()
+        } else {
+            if let activeSessionManager = bluetoothManager.activeSessionManager {
+                bluetoothManager.disconnect(peripheralModel: activeSessionManager.peripheralModel)
+            }
+            bluetoothManager.connect(to: peripheralModel)
+            activityIndicator.startAnimating()
+        }
     }
 }

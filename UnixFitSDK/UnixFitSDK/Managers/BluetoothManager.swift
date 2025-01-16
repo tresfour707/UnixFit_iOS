@@ -9,6 +9,7 @@ import CoreBluetooth
 
 public protocol BluetoothManaging: AnyObject {
     var isReady: Bool { get }
+    var isScanning: Bool { get }
     var peripheralModels: [PeripheralModel] { get }
     var activeSessionManager: SessionManaging? { get }
 
@@ -17,6 +18,9 @@ public protocol BluetoothManaging: AnyObject {
 
     func connect(to peripheralModel: PeripheralModel)
     func connectToPeripheral(with id: UUID)
+    func disconnect(peripheralModel: PeripheralModel)
+
+    func deleteStoredPeripherals()
 }
 
 public class BluetoothManager: NSObject, BluetoothManaging {
@@ -25,6 +29,10 @@ public class BluetoothManager: NSObject, BluetoothManaging {
         didSet {
             bluetoothManagerDelegate?.bluetoothManagerDidReadyStateSwitched(isReady)
         }
+    }
+
+    public var isScanning: Bool {
+        centralManager.isScanning
     }
 
     public var peripheralModels: [PeripheralModel] {
@@ -69,6 +77,10 @@ public class BluetoothManager: NSObject, BluetoothManaging {
         centralManager.connect(peripheralModel.peripheral)
     }
 
+    public func disconnect(peripheralModel: PeripheralModel) {
+        centralManager.cancelPeripheralConnection(peripheralModel.peripheral)
+    }
+
     public func connectToPeripheral(with id: UUID) {
         guard let peripheral = peripheralModel(with: id) else {
             return
@@ -83,6 +95,10 @@ public class BluetoothManager: NSObject, BluetoothManaging {
 
     public func stopScanningForPeripherals() {
         centralManager.stopScan()
+    }
+
+    public func deleteStoredPeripherals() {
+        peripheralsDictionary = [:]
     }
 
     // MARK: - Internal methods
@@ -101,8 +117,8 @@ public class BluetoothManager: NSObject, BluetoothManaging {
             return
         }
 
-        bluetoothManagerDelegate?.bluetoothManagerDidConnectToPeripheral(with: peripheralModel)
         activeSessionManager = SessionManager(peripheralModel: peripheralModel)
+        bluetoothManagerDelegate?.bluetoothManagerDidConnectToPeripheral(with: peripheralModel)
     }
 
     func removeSessionManager() {

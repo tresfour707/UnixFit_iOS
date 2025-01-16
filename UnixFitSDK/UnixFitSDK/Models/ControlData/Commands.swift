@@ -7,32 +7,32 @@
 
 import Foundation
 
-protocol Command {
+public protocol Command {
     var data: Data { get }
     var parametersBytesArray: [UInt8] { get }
     var controlType: CommandType { get }
 }
 
 extension Command {
-    var parametersBytesArray: [UInt8] {
+    public var parametersBytesArray: [UInt8] {
         []
     }
 
-    var data: Data {
+    public var data: Data {
         Data(uint8Bytes: [controlType.rawValue] + parametersBytesArray)
     }
 }
 
-struct RequestCommand: Command {
-    var controlType: CommandType = .requestControl
+public struct RequestCommand: Command {
+    public var controlType: CommandType = .requestControl
 }
 
 struct ResetCommand: Command {
-    var controlType: CommandType = .reset
+    public var controlType: CommandType = .reset
 }
 
 struct SetTargetSpeedCommand: Command {
-    var controlType: CommandType = .setTargetSpeed
+    public var controlType: CommandType = .setTargetSpeed
     var parametersBytesArray: [UInt8]
 
     init(targetSpeed: UInt16) {

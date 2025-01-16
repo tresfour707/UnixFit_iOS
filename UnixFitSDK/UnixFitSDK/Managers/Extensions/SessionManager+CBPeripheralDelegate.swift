@@ -9,9 +9,11 @@ import CoreBluetooth
 
 extension SessionManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        print("[CBPeripheralDelegate] did discover FTMS service", peripheral.services!)
-        let service = peripheral.services![0]
-        peripheral.discoverCharacteristics(nil, for: peripheral.services![0])
+        guard let services = peripheral.services else { return }
+        print("[CBPeripheralDelegate] did discover services", services)
+        for service in services {
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -20,6 +22,10 @@ extension SessionManager: CBPeripheralDelegate {
         service.characteristics?.forEach { characteristic in
             if characteristic.uuid == FTMSCharacteristic.FTMSControlPoint.uuid {
                 save(controlCharacteristic: characteristic)
+            }
+            if characteristic.uuid == FTMSCharacteristic.FTMSFeature.uuid {
+                parseFTMSFeature(characteristic)
+                peripheral.readValue(for: characteristic)
             }
             peripheral.setNotifyValue(true, for: characteristic)
         }
@@ -35,30 +41,40 @@ extension SessionManager: CBPeripheralDelegate {
         case FTMSCharacteristic.rowerData.uuid:
             guard let data = characteristic.value else { return }
             let rowerData = RowerRawData(from: data)
+            fetch(deviceData: DeviceData.rower(rowerData))
 
         case FTMSCharacteristic.treadmillData.uuid:
             guard let data = characteristic.value else { return }
             let treadmillData = TreadmillRawData(from: data)
+            fetch(deviceData: DeviceData.treadmill(treadmillData))
 
         case FTMSCharacteristic.stairClimber.uuid:
             guard let data = characteristic.value else { return }
             let stairClimberData = StairClimberRawData(from: data)
+            fetch(deviceData: DeviceData.stairClimber(stairClimberData))
 
         case FTMSCharacteristic.indoorBike.uuid:
             guard let data = characteristic.value else { return }
             let indoorBikeData = IndoorBikeRawData(from: data)
+            fetch(deviceData: DeviceData.indoorBike(indoorBikeData))
 
         case FTMSCharacteristic.stepClimber.uuid:
             guard let data = characteristic.value else { return }
             let stepClimberData = StepClimberRawData(from: data)
+            fetch(deviceData: DeviceData.stepClimber(stepClimberData))
 
         case FTMSCharacteristic.crossTrainerData.uuid:
             guard let data = characteristic.value else { return }
             let crossTrainerData = CrossTrainerRawData(from: data)
+            fetch(deviceData: DeviceData.crossTrainer(crossTrainerData))
 
         case FTMSCharacteristic.FTMSControlPoint.uuid:
             guard let data = characteristic.value else { return }
             print(String(data: data, encoding: .utf8))
+
+        case FTMSCharacteristic.FTMSFeature.uuid:
+            guard let data = characteristic.value else { return }
+            parseFTMSFeature(characteristic)
 
         default:
             guard let data = characteristic.value else { return }

@@ -8,20 +8,35 @@
 import CoreBluetooth
 
 public protocol SessionManaging: AnyObject {
-    
+    var peripheralModel: PeripheralModel { get }
+
+    func addDelegate(_ delegate: SessionManagerDelegate)
+    func removeDelegate(_ delegate: SessionManagerDelegate)
+    func send(command: Command)
 }
 
 class SessionManager: NSObject, SessionManaging {
-    private let peripheralModel: PeripheralModel
+    public let peripheralModel: PeripheralModel
     fileprivate var controlCharacteristic: CBCharacteristic?
+
+    var multicastDelegate = MulticastDelegate<SessionManagerDelegate>()
 
     init(peripheralModel: PeripheralModel) {
         self.peripheralModel = peripheralModel
-
+        super.init()
+        peripheralModel.peripheral.delegate = self
         peripheralModel.peripheral.discoverServices([FTMSCharacteristic.serviceFTMS.uuid])
     }
 
     // MARK: - Public methods
+    public func addDelegate(_ delegate: SessionManagerDelegate) {
+        multicastDelegate.add(delegate: delegate)
+    }
+
+    public func removeDelegate(_ delegate: SessionManagerDelegate) {
+        multicastDelegate.remove(delegate: delegate)
+    }
+
     public func send(command: Command) {
         guard let controlCharacteristic else {
             return
@@ -32,5 +47,15 @@ class SessionManager: NSObject, SessionManaging {
     // MARK: - Internal methods
     func save(controlCharacteristic: CBCharacteristic) {
         self.controlCharacteristic = controlCharacteristic
+    }
+
+    func fetch(deviceData: DeviceData) {
+        multicastDelegate.invoke { $0.sessionManagerDidFetchDeviceData(deviceData) }
+    }
+
+    func parseFTMSFeature(_ characteristic: CBCharacteristic) {
+        guard let value = characteristic.value else { return }
+        let supportedCommands = SupportedCommandsData(from: value)
+        print(supportedCommands)
     }
 }
