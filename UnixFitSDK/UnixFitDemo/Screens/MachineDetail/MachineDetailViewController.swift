@@ -15,6 +15,7 @@ final class MachineDetailViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Device Detail Info"
         activeSessionManager.addDelegate(self)
         setupViews()
     }
@@ -40,6 +41,10 @@ final class MachineDetailViewController: UIViewController {
 }
 
 extension MachineDetailViewController: SessionManagerDelegate {
+    func sessionManagerDidChangeTrainingStatus(_ trainingStatus: UnixFitSDK.TrainingStatusData) {
+        print(trainingStatus)
+    }
+    
     func sessionManagerDidFetchDeviceData(_ deviceData: DeviceData) {
         let dataString: String = {
             switch deviceData {

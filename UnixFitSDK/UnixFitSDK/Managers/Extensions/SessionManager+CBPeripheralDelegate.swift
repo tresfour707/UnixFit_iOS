@@ -70,11 +70,20 @@ extension SessionManager: CBPeripheralDelegate {
 
         case FTMSCharacteristic.FTMSControlPoint.uuid:
             guard let data = characteristic.value else { return }
-            print(String(data: data, encoding: .utf8))
+            let commandResponse = CommandResponseData(from: data)
 
         case FTMSCharacteristic.FTMSFeature.uuid:
             guard let data = characteristic.value else { return }
             parseFTMSFeature(characteristic)
+
+        case FTMSCharacteristic.FTMSStatus.uuid:
+            guard let data = characteristic.value else { return }
+            print(String(data: data, encoding: .utf8))
+
+        case FTMSCharacteristic.trainingStatus.uuid:
+            guard let data = characteristic.value else { return }
+            let trainingStatus = TrainingStatusData(from: data)
+            sendTrainingStatus(trainingStatus)
 
         default:
             guard let data = characteristic.value else { return }

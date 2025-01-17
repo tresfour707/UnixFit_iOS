@@ -40,7 +40,7 @@ extension SupportedCommandsData {
         let commandsBytes = allBytes[4...]
         let commandsData = Data(uint8Bytes: Array(commandsBytes))
 
-        let fields = Fields32(commandsData)
+        let fields = Fields<UInt32>(commandsData)
         let options = SupportedCommandsDataOptions(rawValue: fields.flags)
         var supportedCommandsList = [CommandType]()
         supportedCommandsList.append(contentsOf: [.requestControl, .reset, .startOrResume, .stopOrPause])

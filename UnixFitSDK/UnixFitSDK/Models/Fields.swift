@@ -16,33 +16,8 @@ private extension FixedWidthInteger {
     }
 }
 
-struct Fields {
-    var flags: UInt16 = 0
-    var data: Data
-    var offset = 0
-
-    init(_ data: Data) {
-        self.data = data
-        self.flags = get()
-    }
-
-    mutating func get<T: FixedWidthInteger>() -> T {
-        let byteWidth = T.self.byteWidth
-        var value: T = 0
-
-        data.subdata(
-            in: data.startIndex.advanced(by: offset)..<data.startIndex.advanced(by: offset + byteWidth)
-        ).withUnsafeBytes { bytes in
-            value = bytes.load(as: T.self)
-        }
-        offset += T.byteWidth
-
-        return value
-    }
-}
-
-struct Fields32 {
-    var flags: UInt32 = 0
+struct Fields<Flags: FixedWidthInteger> {
+    var flags: Flags = 0
     var data: Data
     var offset = 0
 

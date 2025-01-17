@@ -8,8 +8,6 @@
 import UIKit
 
 final class MachineListCell: UITableViewCell {
-    static let identifier = String(describing: type(of: MachineListCell.self))
-
     private lazy var titleLabel = UILabel()
 
     // MARK: - Initialization
@@ -34,8 +32,8 @@ final class MachineListCell: UITableViewCell {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(
             [
-                titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
-                titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0),
+                titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16.0),
+                titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16.0),
                 titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8.0),
                 titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8.0)
             ]

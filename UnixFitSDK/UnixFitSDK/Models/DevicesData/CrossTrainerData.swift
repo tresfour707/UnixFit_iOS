@@ -54,7 +54,7 @@ public struct CrossTrainerRawData {
 
 extension CrossTrainerRawData {
     init(from data: Data) {
-        var fields = Fields(data)
+        var fields = Fields<UInt16>(data)
         let options = CrossTrainerDataOptions(rawValue: fields.flags)
 
         instantaneousSpeed = options.contains(.moreDataNotPresent) ? nil : fields.get()

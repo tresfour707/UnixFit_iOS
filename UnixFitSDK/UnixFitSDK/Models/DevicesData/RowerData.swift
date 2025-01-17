@@ -46,7 +46,7 @@ public struct RowerRawData {
 
 extension RowerRawData {
     init(from data: Data) {
-        var fields = Fields(data)
+        var fields = Fields<UInt16>(data)
         let options = RowerDataOptions(rawValue: fields.flags)
 
         if !options.contains(.moreDataNotPresent) {

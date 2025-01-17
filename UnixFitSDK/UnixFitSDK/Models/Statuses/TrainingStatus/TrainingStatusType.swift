@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TrainingStatusType: UInt8 {
+public enum TrainingStatusType: UInt8 {
     case other = 0x00
     case idle = 0x01
     case warmingUp = 0x02

@@ -38,7 +38,7 @@ public struct StepClimberRawData {
 
 extension StepClimberRawData {
     init(from data: Data) {
-        var fields = Fields(data)
+        var fields = Fields<UInt16>(data)
         let options = StairClimberDataOptions(rawValue: fields.flags)
 
         if !options.contains(.moreDataNotPresent) {

@@ -12,7 +12,7 @@ public protocol SessionManaging: AnyObject {
 
     func addDelegate(_ delegate: SessionManagerDelegate)
     func removeDelegate(_ delegate: SessionManagerDelegate)
-    func send(command: Command)
+    func send(commandWithValue: CommandWithValue)
 }
 
 class SessionManager: NSObject, SessionManaging {
@@ -37,10 +37,11 @@ class SessionManager: NSObject, SessionManaging {
         multicastDelegate.remove(delegate: delegate)
     }
 
-    public func send(command: Command) {
+    public func send(commandWithValue: CommandWithValue) {
         guard let controlCharacteristic else {
             return
         }
+        let command = commandWithValue.createCommand()
         peripheralModel.peripheral.writeValue(command.data, for: controlCharacteristic, type: .withResponse)
     }
 
@@ -51,6 +52,10 @@ class SessionManager: NSObject, SessionManaging {
 
     func fetch(deviceData: DeviceData) {
         multicastDelegate.invoke { $0.sessionManagerDidFetchDeviceData(deviceData) }
+    }
+
+    func sendTrainingStatus(_ status: TrainingStatusData) {
+        multicastDelegate.invoke { $0.sessionManagerDidChangeTrainingStatus(status) }
     }
 
     func parseFTMSFeature(_ characteristic: CBCharacteristic) {

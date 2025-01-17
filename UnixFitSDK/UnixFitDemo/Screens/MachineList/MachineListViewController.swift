@@ -25,6 +25,7 @@ final class MachineListViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Devices"
         view.backgroundColor = .white
         setupViews()
         setupManager()
@@ -48,8 +49,9 @@ final class MachineListViewController: UIViewController {
             ]
         )
 
-        tableView.register(MachineListCell.self, forCellReuseIdentifier: MachineListCell.identifier)
+        tableView.register(MachineListCell.self)
 
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.hidesWhenStopped = true
         activityIndicator.stopAnimating()
         view.addSubview(activityIndicator)
@@ -69,11 +71,10 @@ final class MachineListViewController: UIViewController {
         present(alert, animated: true)
     }
 
-    private func openDetailScreen() {
-        let detailVC = MachineDetailViewController()
-        detailVC.activeSessionManager = bluetoothManager.activeSessionManager
-
-        navigationController?.pushViewController(detailVC, animated: true)
+    private func openCommandsScreen() {
+        let commandsScreen = MachineCommandsVC()
+        commandsScreen.activeSessionManager = bluetoothManager.activeSessionManager
+        navigationController?.pushViewController(commandsScreen, animated: true)
     }
 
     private func reloadData() {
@@ -131,7 +132,7 @@ extension MachineListViewController: BluetoothManagerDelegate {
         bluetoothManager.stopScanningForPeripherals()
         reloadData()
         DispatchQueue.main.async {
-            self.openDetailScreen()
+            self.openCommandsScreen()
         }
     }
     
@@ -153,9 +154,7 @@ extension MachineListViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let peripheralModel = bluetoothManager.peripheralModels[indexPath.row]
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MachineListCell.identifier, for: indexPath) as? MachineListCell else {
-            fatalError()
-        }
+        let cell = tableView.dequeueCell(withType: MachineListCell.self, for: indexPath)
         if peripheralModel.id == bluetoothManager.activeSessionManager?.peripheralModel.id {
             cell.backgroundColor = .green
         }
@@ -168,7 +167,7 @@ extension MachineListViewController: UITableViewDelegate, UITableViewDataSource 
         let peripheralModel = bluetoothManager.peripheralModels[indexPath.row]
 
         if peripheralModel.id == bluetoothManager.activeSessionManager?.peripheralModel.id {
-            openDetailScreen()
+            openCommandsScreen()
         } else {
             if let activeSessionManager = bluetoothManager.activeSessionManager {
                 bluetoothManager.disconnect(peripheralModel: activeSessionManager.peripheralModel)

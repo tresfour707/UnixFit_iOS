@@ -50,7 +50,7 @@ public struct TreadmillRawData {
 
 extension TreadmillRawData {
     init(from data: Data) {
-        var fields = Fields(data)
+        var fields = Fields<UInt16>(data)
         let options = TreadmillDataOptions(rawValue: fields.flags)
 
         instantaneousSpeed = options.contains(.moreDataNotPresent) ? nil : fields.get()

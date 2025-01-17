@@ -45,7 +45,7 @@ public struct IndoorBikeRawData {
 
 extension IndoorBikeRawData {
     public init(from data: Data) {
-        var fields = Fields(data)
+        var fields = Fields<UInt16>(data)
         let options = IndoorBikeDataOptions(rawValue: fields.flags)
 
         instantaneousSpeed = options.contains(.moreDataNotPresent) ? nil : fields.get()

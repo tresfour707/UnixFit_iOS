@@ -23,7 +23,7 @@ extension Command {
     }
 }
 
-public struct RequestCommand: Command {
+struct RequestCommand: Command {
     public var controlType: CommandType = .requestControl
 }
 
@@ -196,8 +196,8 @@ struct SpinDownControlCommand: Command {
     var controlType: CommandType = .spinDownControl
     var parametersBytesArray: [UInt8]
 
-    init(windSpeed: Int16, grade: Int16, crr: UInt8, cw: UInt8) {
-        self.parametersBytesArray = windSpeed.getBytes() + grade.getBytes() + crr.getBytes() + cw.getBytes()
+    init() {
+        self.parametersBytesArray = [0x01]
     }
 }
 
@@ -205,7 +205,7 @@ struct SetTargetedCadenceCommand: Command {
     var controlType: CommandType = .setTargetedCadence
     var parametersBytesArray: [UInt8]
 
-    init() {
-        self.parametersBytesArray = [0x01]
+    init(targetedCadence: UInt16) {
+        self.parametersBytesArray = targetedCadence.getBytes()
     }
 }

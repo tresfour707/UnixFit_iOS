@@ -39,7 +39,7 @@ public struct StairClimberRawData {
 
 extension StairClimberRawData {
     init(from data: Data) {
-        var fields = Fields(data)
+        var fields = Fields<UInt16>(data)
         let options = StairClimberDataOptions(rawValue: fields.flags)
 
         floorsCount = options.contains(.moreDataNotPresent) ? nil : fields.get()
