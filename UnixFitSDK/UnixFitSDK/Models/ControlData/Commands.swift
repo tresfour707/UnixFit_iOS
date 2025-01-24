@@ -196,9 +196,14 @@ struct SpinDownControlCommand: Command {
     var controlType: CommandType = .spinDownControl
     var parametersBytesArray: [UInt8]
 
-    init() {
-        self.parametersBytesArray = [0x01]
+    init(parameterType: SpinDownControlParameterType) {
+        self.parametersBytesArray = [parameterType.rawValue]
     }
+}
+
+public enum SpinDownControlParameterType: UInt8 {
+    case start = 0x01
+    case ignore = 0x02
 }
 
 struct SetTargetedCadenceCommand: Command {

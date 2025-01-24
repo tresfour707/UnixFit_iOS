@@ -5,20 +5,48 @@
 //  Created by Dmitriy Mamatov on 16.01.2025.
 //
 
+import Foundation
 import UIKit
 import UnixFitSDK
 
 final class MachineCommandsVC: UIViewController {
+    private lazy var trainingStatusLabel = UILabel()
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
 
+        tableView.register(MachineListCell.self)
+        tableView.register(OneButtonCell.self)
+        tableView.register(TwoButtonsCell.self)
+
         return tableView
     }()
 
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 12
+
+        stackView.addArrangedSubview(trainingStatusLabel)
+        stackView.addArrangedSubview(tableView)
+
+        return stackView
+    }()
+
     var activeSessionManager: SessionManaging!
+
+    var logs = [String]()
+
+    lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd-yyyy HH:mm"
+
+        return formatter
+    }()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -35,19 +63,22 @@ final class MachineCommandsVC: UIViewController {
 
     // MARK: - Private methods
     private func setupViews() {
-        view.addSubview(tableView)
+        trainingStatusLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
         NSLayoutConstraint.activate(
             [
-                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                tableView.topAnchor.constraint(equalTo: view.topAnchor),
-                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ]
         )
 
-        tableView.register(MachineListCell.self)
-        tableView.register(OneButtonCell.self)
-        tableView.register(TwoButtonsCell.self)
+        setTrainingStatus(activeSessionManager.currentTrainingStatus?.statusType.title ?? "")
+    }
+
+    private func setTrainingStatus(_ trainingStatusString: String) {
+        trainingStatusLabel.text = " Текущий статус: \(trainingStatusString)"
     }
 
     private func presentAlert(_ alert: UIAlertController) {
@@ -59,6 +90,12 @@ final class MachineCommandsVC: UIViewController {
         detailVC.activeSessionManager = activeSessionManager
 
         present(detailVC, animated: true)
+    }
+
+    private func openStatusesScreen() {
+        let statusesScreen = MachineStatusVC()
+        statusesScreen.logs = logs.reversed()
+        navigationController?.pushViewController(statusesScreen, animated: true)
     }
 
     private func reloadData() {
@@ -298,34 +335,48 @@ final class MachineCommandsVC: UIViewController {
             return
         }
 
-        present(inputVC, animated: true)
+        navigationController?.pushViewController(inputVC, animated: true)
+    }
+
+    private func saveToLogs(_ log: String) {
+        let dateString = dateFormatter.string(from: Date())
+        logs.append(dateString + ": " + log)
     }
 }
 
 extension MachineCommandsVC: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        MachineCommandsSectionType.allCases.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
+        let sectionType = MachineCommandsSectionType.allCases[section]
+
+        switch sectionType {
+        case .detailInformation, .statuses:
             return 1
 
-        case 1:
+        case .commands:
             return CommandType.allCases.count
-
-        default:
-            return 0
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard indexPath.section == 1 else {
+        let sectionType = MachineCommandsSectionType.allCases[indexPath.section]
+
+        switch sectionType {
+        case .detailInformation:
             let cell = tableView.dequeueCell(withType: MachineListCell.self, for: indexPath)
             cell.update(title: "Detail information")
-
             return cell
+
+        case .statuses:
+            let cell = tableView.dequeueCell(withType: MachineListCell.self, for: indexPath)
+            cell.update(title: "Logs")
+            return cell
+
+        default:
+            break
         }
 
         let commandType = CommandType.allCases[indexPath.row]
@@ -367,10 +418,15 @@ extension MachineCommandsVC: UITableViewDelegate, UITableViewDataSource {
 
             return cell
         case .spinDownControl:
-            let cell = tableView.dequeueCell(withType: OneButtonCell.self, for: indexPath)
-            cell.update(buttonTitle: "Spin Down Control") { [weak self] in
-                self?.activeSessionManager.send(commandWithValue: .spinDownControl)
-            }
+            let cell = tableView.dequeueCell(withType: TwoButtonsCell.self, for: indexPath)
+            cell.update(
+                firstButtonTitle: "Start",
+                secondButtonTitle: "Ignore",
+                onFirstButtonTouched: { [weak self] in
+                    self?.activeSessionManager.send(commandWithValue: .spinDownControl(.start))
+                }, onSecondButtonTouched: { [weak self] in
+                    self?.activeSessionManager.send(commandWithValue: .spinDownControl(.ignore))
+                })
 
             return cell
 
@@ -386,28 +442,64 @@ extension MachineCommandsVC: UITableViewDelegate, UITableViewDataSource {
         defer {
             tableView.deselectRow(at: indexPath, animated: true)
         }
-        guard indexPath.section != 0 else {
+
+        let sectionType = MachineCommandsSectionType.allCases[indexPath.section]
+
+        switch sectionType {
+        case .detailInformation:
             openDetailScreen()
-            return
-        }
 
-        let commandType = CommandType.allCases[indexPath.row]
+        case .statuses:
+            openStatusesScreen()
 
-        switch commandType {
-        case .requestControl, .reset, .stopOrPause, .startOrResume, .spinDownControl:
-            return
+        case .commands:
+            let commandType = CommandType.allCases[indexPath.row]
 
-        default:
-            openInputScreen(for: commandType)
+            switch commandType {
+            case .requestControl, .reset, .stopOrPause, .startOrResume, .spinDownControl:
+                return
+
+            default:
+                openInputScreen(for: commandType)
+            }
         }
     }
 }
 
 extension MachineCommandsVC: SessionManagerDelegate {
+    func sessionManagerDidRecieveFTMSStatus(_ ftmsStatus: UnixFitSDK.FTMSStatus) {
+        let ftmsStatus = "FTMS Status: \(ftmsStatus)"
+        saveToLogs(ftmsStatus)
+    }
+    
+    func sessionManagerDidCompleteCommand(commandResponse: UnixFitSDK.CommandResponseData) {
+        guard let resultCode = commandResponse.resultCode, let requestCommand = commandResponse.requestCommand else {
+            return
+        }
+        let commandResponse = "Command Response: \(requestCommand) command result: \(resultCode)"
+        saveToLogs(commandResponse)
+    }
+
     func sessionManagerDidFetchDeviceData(_ deviceData: UnixFitSDK.DeviceData) {
     }
     
     func sessionManagerDidChangeTrainingStatus(_ trainingStatus: UnixFitSDK.TrainingStatusData) {
-        print(trainingStatus)
+        let trainingStatusString = "Training Status: \(trainingStatus.statusType.title)"
+        saveToLogs(trainingStatusString)
+
+        DispatchQueue.main.async {
+            self.setTrainingStatus(trainingStatus.statusType.title)
+        }
     }
+
+    func sessionManagerDidFetchFTMSFeatures(_ features: FTMSFeaturesData) {
+        let featuresString = "FTMSFeatures: \(features)"
+        saveToLogs(featuresString)
+    }
+}
+
+enum MachineCommandsSectionType: Int, CaseIterable {
+    case detailInformation = 0
+    case statuses
+    case commands
 }

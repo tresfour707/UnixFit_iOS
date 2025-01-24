@@ -15,7 +15,7 @@ struct TrainingStatusDataOptions: OptionSet {
 }
 
 public struct TrainingStatusData {
-    public var statusType: TrainingStatusType?
+    public var statusType: TrainingStatusType
 }
 
 extension TrainingStatusData {

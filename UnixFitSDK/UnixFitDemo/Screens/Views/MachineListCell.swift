@@ -8,7 +8,7 @@
 import UIKit
 
 final class MachineListCell: UITableViewCell {
-    private lazy var titleLabel = UILabel()
+    lazy var titleLabel = UILabel()
 
     // MARK: - Initialization
     required init?(coder: NSCoder) {

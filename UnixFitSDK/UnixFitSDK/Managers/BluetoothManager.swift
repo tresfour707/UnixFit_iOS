@@ -61,6 +61,7 @@ public class BluetoothManager: NSObject, BluetoothManaging {
     private var peripheralsDictionary: [UUID: PeripheralModel] = [:]
     private static var currentSessionManager: SessionManaging?
 
+    // MARK: - Initialization
     public init(delegate: BluetoothManagerDelegate) {
         bluetoothManagerDelegate = delegate
         super.init()
@@ -68,6 +69,7 @@ public class BluetoothManager: NSObject, BluetoothManaging {
         isReady = centralManager.state == CBManagerState.poweredOn
     }
 
+    // MARK: - Deinitialization
     deinit {
         centralManager.stopScan()
     }

@@ -20,13 +20,14 @@ extension SessionManager: CBPeripheralDelegate {
         print("[CBPeripheralDelegate] did discover FTMS characteristic", service.characteristics ?? "")
 
         service.characteristics?.forEach { characteristic in
-            if characteristic.uuid == FTMSCharacteristic.FTMSControlPoint.uuid {
+            switch characteristic.uuid {
+            case FTMSCharacteristic.FTMSControlPoint.uuid:
                 save(controlCharacteristic: characteristic)
-            }
-            if characteristic.uuid == FTMSCharacteristic.FTMSFeature.uuid {
-                parseFTMSFeature(characteristic)
+
+            default:
                 peripheral.readValue(for: characteristic)
             }
+
             peripheral.setNotifyValue(true, for: characteristic)
         }
     }
@@ -71,14 +72,17 @@ extension SessionManager: CBPeripheralDelegate {
         case FTMSCharacteristic.FTMSControlPoint.uuid:
             guard let data = characteristic.value else { return }
             let commandResponse = CommandResponseData(from: data)
+            sendCommandResponse(commandResponse)
 
         case FTMSCharacteristic.FTMSFeature.uuid:
             guard let data = characteristic.value else { return }
-            parseFTMSFeature(characteristic)
+            let ftmsFeaturesData = FTMSFeaturesData(from: data)
+            fetch(ftmsFeaturesData: ftmsFeaturesData)
 
         case FTMSCharacteristic.FTMSStatus.uuid:
             guard let data = characteristic.value else { return }
-            print(String(data: data, encoding: .utf8))
+            let ftmsStatus = FTMSStatus(data: data)
+            sendFTMSStatus(ftmsStatus)
 
         case FTMSCharacteristic.trainingStatus.uuid:
             guard let data = characteristic.value else { return }

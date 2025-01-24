@@ -33,7 +33,7 @@ public enum CommandWithValue {
                                              timeInMaximumZone: UInt16)
     case setIndoorBikeSimulationParameters(windSpeed: Int16, grade: Int16, crr: UInt8, cw: UInt8)
     case setWheelCircumference(UInt16)
-    case spinDownControl
+    case spinDownControl(SpinDownControlParameterType)
     case setTargetedCadence(UInt16)
 
     func createCommand() -> Command {
@@ -112,8 +112,8 @@ public enum CommandWithValue {
         case .setWheelCircumference(let wheelCircumference):
             return SetWheelCircumferenceCommand(wheelCircumference: wheelCircumference)
 
-        case .spinDownControl:
-            return SpinDownControlCommand()
+        case .spinDownControl(let parameterType):
+            return SpinDownControlCommand(parameterType: parameterType)
 
         case .setTargetedCadence(let cadence):
             return SetTargetedCadenceCommand(targetedCadence: cadence)

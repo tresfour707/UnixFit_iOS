@@ -68,7 +68,7 @@ final class MachineInputVC: UIViewController {
 
         NSLayoutConstraint.activate(
             [
-                stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+                stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
                 stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                 stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
                 sendButton.heightAnchor.constraint(equalToConstant: 40.0)

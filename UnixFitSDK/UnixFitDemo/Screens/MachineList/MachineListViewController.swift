@@ -14,6 +14,8 @@ final class MachineListViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
+        
+        tableView.register(MachineListCell.self)
 
         return tableView
     }()
@@ -49,8 +51,6 @@ final class MachineListViewController: UIViewController {
             ]
         )
 
-        tableView.register(MachineListCell.self)
-
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.hidesWhenStopped = true
         activityIndicator.stopAnimating()
@@ -61,6 +61,14 @@ final class MachineListViewController: UIViewController {
                 activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
             ]
         )
+
+        let disconnectButton = UIBarButtonItem(
+            title: "Disconnect",
+            style: .plain,
+            target: self,
+            action: #selector(disconnectDevice)
+        )
+        navigationItem.rightBarButtonItem = disconnectButton
     }
 
     private func setupManager() {
@@ -87,6 +95,14 @@ final class MachineListViewController: UIViewController {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
         }
+    }
+
+    // MARK: - Actions
+    @objc private func disconnectDevice() {
+        guard let peripheralModel = bluetoothManager.activeSessionManager?.peripheralModel else {
+            return
+        }
+        bluetoothManager.disconnect(peripheralModel: peripheralModel)
     }
 }
 
@@ -155,9 +171,7 @@ extension MachineListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let peripheralModel = bluetoothManager.peripheralModels[indexPath.row]
         let cell = tableView.dequeueCell(withType: MachineListCell.self, for: indexPath)
-        if peripheralModel.id == bluetoothManager.activeSessionManager?.peripheralModel.id {
-            cell.backgroundColor = .green
-        }
+        cell.backgroundColor = peripheralModel.id == bluetoothManager.activeSessionManager?.peripheralModel.id ? .green : .white
         cell.update(title: peripheralModel.name)
 
         return cell

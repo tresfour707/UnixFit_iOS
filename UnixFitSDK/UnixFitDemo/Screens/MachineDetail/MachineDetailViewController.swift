@@ -41,6 +41,14 @@ final class MachineDetailViewController: UIViewController {
 }
 
 extension MachineDetailViewController: SessionManagerDelegate {
+    func sessionManagerDidRecieveFTMSStatus(_ ftmsStatus: UnixFitSDK.FTMSStatus) {
+        print(ftmsStatus)
+    }
+    
+    func sessionManagerDidCompleteCommand(commandResponse: UnixFitSDK.CommandResponseData) {
+        print(commandResponse)
+    }
+    
     func sessionManagerDidChangeTrainingStatus(_ trainingStatus: UnixFitSDK.TrainingStatusData) {
         print(trainingStatus)
     }
@@ -74,5 +82,8 @@ extension MachineDetailViewController: SessionManagerDelegate {
         DispatchQueue.main.async {
             self.dataLabel.text = dataString
         }
+    }
+
+    func sessionManagerDidFetchFTMSFeatures(_ features: FTMSFeaturesData) {
     }
 }

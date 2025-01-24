@@ -9,6 +9,8 @@ import CoreBluetooth
 
 public protocol SessionManaging: AnyObject {
     var peripheralModel: PeripheralModel { get }
+    var currentTrainingStatus: TrainingStatusData? { get }
+    var currentDeviceData: DeviceData? { get }
 
     func addDelegate(_ delegate: SessionManagerDelegate)
     func removeDelegate(_ delegate: SessionManagerDelegate)
@@ -16,11 +18,18 @@ public protocol SessionManaging: AnyObject {
 }
 
 class SessionManager: NSObject, SessionManaging {
+    // MARK: - Public properties
     public let peripheralModel: PeripheralModel
+
+    public var currentTrainingStatus: TrainingStatusData?
+    public var currentDeviceData: DeviceData?
+    public var currentFtmsFeaturesData: FTMSFeaturesData?
+
+    // MARK: - Fileprivate properties
     fileprivate var controlCharacteristic: CBCharacteristic?
+    fileprivate var multicastDelegate = MulticastDelegate<SessionManagerDelegate>()
 
-    var multicastDelegate = MulticastDelegate<SessionManagerDelegate>()
-
+    // MARK: - Initialization
     init(peripheralModel: PeripheralModel) {
         self.peripheralModel = peripheralModel
         super.init()
@@ -51,16 +60,25 @@ class SessionManager: NSObject, SessionManaging {
     }
 
     func fetch(deviceData: DeviceData) {
+        currentDeviceData = deviceData
         multicastDelegate.invoke { $0.sessionManagerDidFetchDeviceData(deviceData) }
     }
 
     func sendTrainingStatus(_ status: TrainingStatusData) {
+        currentTrainingStatus = status
         multicastDelegate.invoke { $0.sessionManagerDidChangeTrainingStatus(status) }
     }
 
-    func parseFTMSFeature(_ characteristic: CBCharacteristic) {
-        guard let value = characteristic.value else { return }
-        let supportedCommands = SupportedCommandsData(from: value)
-        print(supportedCommands)
+    func sendCommandResponse(_ response: CommandResponseData) {
+        multicastDelegate.invoke { $0.sessionManagerDidCompleteCommand(commandResponse: response) }
+    }
+
+    func fetch(ftmsFeaturesData: FTMSFeaturesData) {
+        currentFtmsFeaturesData =  ftmsFeaturesData
+        multicastDelegate.invoke { $0.sessionManagerDidFetchFTMSFeatures(ftmsFeaturesData)}
+    }
+
+    func sendFTMSStatus(_ status: FTMSStatus) {
+        multicastDelegate.invoke { $0.sessionManagerDidRecieveFTMSStatus(status)}
     }
 }

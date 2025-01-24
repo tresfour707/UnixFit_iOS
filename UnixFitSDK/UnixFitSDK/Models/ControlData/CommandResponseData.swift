@@ -8,15 +8,21 @@
 import Foundation
 
 public struct CommandResponseData {
-    var requestCommand: CommandType?
-    var resultCode: CommandResponseResultCode?
+    public var requestCommand: CommandType?
+    public var resultCode: CommandResponseResultCode?
+    public var spinDownStatusValue: SpinDownStatusValue?
 }
 
 extension CommandResponseData {
     init(from data: Data) {
-        let dataBytes = [UInt8](data)
-        requestCommand = CommandType(rawValue: dataBytes[1])
-        resultCode = CommandResponseResultCode(rawValue: dataBytes[2])
+        var fields = Fields<UInt8>(data)
+        requestCommand = CommandType(rawValue: fields.get())
+        resultCode = CommandResponseResultCode(rawValue: fields.get())
+        if requestCommand == .spinDownControl, resultCode == .success {
+            let targetSpeedLow: UInt16 = fields.get()
+            let targetSpeedHigh: UInt16 = fields.get()
+            spinDownStatusValue = SpinDownStatusValue(targetSpeedLow: targetSpeedLow, targetSpeedHigh: targetSpeedHigh)
+        }
     }
 }
 

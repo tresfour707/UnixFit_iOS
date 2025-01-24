@@ -9,9 +9,5 @@
 		<key>UISceneConfigurations</key>
 		<dict/>
 	</dict>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Предоставьте доступ к Buetooth для работы с тренажерами</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Предоставьте доступ к Buetooth для работы с тренажерами</string>
 </dict>
 </plist>
