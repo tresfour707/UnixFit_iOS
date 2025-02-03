@@ -89,6 +89,31 @@ extension SessionManager: CBPeripheralDelegate {
             let trainingStatus = TrainingStatusData(from: data)
             sendTrainingStatus(trainingStatus)
 
+        case FTMSCharacteristic.supportedSpeedRange.uuid:
+            guard let data = characteristic.value else { return }
+            let supportedSpeedRange = SupportedSpeedRange(from: data)
+            sendSupportedSpeedRange(supportedSpeedRange)
+
+        case FTMSCharacteristic.supportedPowerRange.uuid:
+            guard let data = characteristic.value else { return }
+            let supportedPowerRange = SupportedPowerRange(from: data)
+            sendSupportedPowerRange(supportedPowerRange)
+
+        case FTMSCharacteristic.supportedInclinationRange.uuid:
+            guard let data = characteristic.value else { return }
+            let supportedInclinationRange = SupportedInclinationRange(from: data)
+            sendSupportedInclinationRange(supportedInclinationRange)
+
+        case FTMSCharacteristic.supportedResistanceLevelRange.uuid:
+            guard let data = characteristic.value else { return }
+            let supportedResistanceLevelRange = SupportedResistanceLevelRange(from: data)
+            sendSupportedResistanceLevelRange(supportedResistanceLevelRange)
+
+        case FTMSCharacteristic.supportedHeartRateRange.uuid:
+            guard let data = characteristic.value else { return }
+            let supportedHeartRateRange = SupportedHeartRateRange(from: data)
+            sendSupportedHeartRateRange(supportedHeartRateRange)
+
         default:
             guard let data = characteristic.value else { return }
             print( "[STATUS]", characteristic.uuid, data)

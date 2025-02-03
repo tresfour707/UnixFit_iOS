@@ -12,19 +12,19 @@ extension BluetoothManager: CBCentralManagerDelegate {
         switch central.state {
         case .unknown:
             print("[BluetoothManager] state: unknown")
-            bluetoothManagerDelegate?.bluetoothManagerDidFail(with: .unknown)
+            didRecieveFailedState(with: .unknown)
 
         case .resetting:
             print("[BluetoothManager] state: resetting")
-            bluetoothManagerDelegate?.bluetoothManagerDidFail(with: .resetting)
+            didRecieveFailedState(with: .resetting)
 
         case .unsupported:
             print("[BluetoothManager] state: not available")
-            bluetoothManagerDelegate?.bluetoothManagerDidFail(with: .unsupported)
+            didRecieveFailedState(with: .unsupported)
 
         case .unauthorized:
             print("[BluetoothManager] state: not authorized")
-            bluetoothManagerDelegate?.bluetoothManagerDidFail(with: .unauthorized)
+            didRecieveFailedState(with: .unauthorized)
 
         case .poweredOff:
             print("[BluetoothManager] state: powered off")
@@ -34,7 +34,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
 
         @unknown default:
             print("[BluetoothManager] state: unknown")
-            bluetoothManagerDelegate?.bluetoothManagerDidFail(with: .unknown)
+            didRecieveFailedState(with: .unknown)
         }
 
         isReady = central.state == .poweredOn
@@ -56,7 +56,9 @@ extension BluetoothManager: CBCentralManagerDelegate {
         guard let peripheralModel = peripheralModel(with: peripheral.identifier) else {
             return
         }
-        bluetoothManagerDelegate?.bluetoothManagerDidDisconnectPeripheral(peripheralModel)
+        outputQueue.async { [weak self] in
+            self?.bluetoothManagerDelegate?.bluetoothManagerDidDisconnectPeripheral(peripheralModel)
+        }
     }
 
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -64,6 +66,8 @@ extension BluetoothManager: CBCentralManagerDelegate {
         guard let peripheralModel = peripheralModel(with: peripheral.identifier) else {
             return
         }
-        bluetoothManagerDelegate?.bluetoothManagerDidFailToConnectPeripheral(peripheralModel, error: error)
+        outputQueue.async { [weak self] in
+            self?.bluetoothManagerDelegate?.bluetoothManagerDidFailToConnectPeripheral(peripheralModel, error: error)
+        }
     }
 }

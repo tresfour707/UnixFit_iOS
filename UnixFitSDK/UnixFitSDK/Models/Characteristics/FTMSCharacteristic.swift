@@ -23,6 +23,12 @@ enum FTMSCharacteristic: String {
 
     case trainingStatus = "2AD3"
 
+    case supportedSpeedRange = "2AD4"
+    case supportedInclinationRange = "2AD5"
+    case supportedResistanceLevelRange = "2AD6"
+    case supportedHeartRateRange = "2AD7"
+    case supportedPowerRange = "2AD8"
+
     var uuid: CBUUID {
         return CBUUID( string: self.rawValue )
     }

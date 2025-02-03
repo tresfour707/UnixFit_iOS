@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Статус тренажера. Опционален, может не поддерживаться тренажером.
 public enum FTMSStatus {
     case unknown
     case reset
@@ -134,17 +135,20 @@ public enum FTMSStatus {
     }
 }
 
+/// Время в двух зонах сердечного ритма (в секундах)
 public struct TwoHeartRateZones {
     public let targetedTimeInFatBurnZone: UInt16
     public let targetedTimeInFitnessZone: UInt16
 }
 
+/// Время в трех зонах сердечного ритма (в секундах)
 public struct ThreeHeartRateZones {
     public let targetedTimeInLightZone: UInt16
     public let targetedTimeInModerateZone: UInt16
     public let targetedTimeInHardZone: UInt16
 }
 
+/// Время в пяти зонах сердечного ритма (в секундах)
 public struct FiveHeartRateZones {
     public let targetedTimeInVeryLightZone: UInt16
     public let targetedTimeInLightZone: UInt16
@@ -153,9 +157,17 @@ public struct FiveHeartRateZones {
     public let targetedTimeInMaximumZone: UInt16
 }
 
+/// Параметры симуляции для велосипеда
 public struct BikeSimulationParameters {
+    /// Скорость ветра (м/c)
     public let windSpeed: Int16
+
+    /// Уровень (%)
     public let grade: Int16
+
+    /// Коэффициент трения качения (rolling resistance)
     public let crr: UInt8
+
+    /// Коэффициент сопротивления ветра
     public let cw: UInt8
 }

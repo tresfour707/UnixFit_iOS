@@ -7,19 +7,47 @@
 
 import Foundation
 
+/// Список команд для отправки на тренажер
 public enum CommandWithValue {
+    /// Получение контроля над тренажером
     case requestControl
+
+    /// Сброс настраиваемых настроек
     case reset
+
+    /// Изменение скорости (0.01 км/ч за единицу)
     case setTargetSpeed(UInt16)
+
+    /// Изменение наклона (0.1% за единицу)
     case setTargetInclination(Int16)
+
+    /// Изменение сопротивления (0.1 за единицу)
     case setTargetResistance(UInt8)
+
+    /// Изменение мощности (1 W за единицу)
     case setTargetPower(Int16)
+
+    /// Изменение целевого ритма сердца (1 BPM за единицу)
     case setTargetHeartRate(UInt8)
+
+    /// Старт или продолжение
     case startOrResume
+
+    /// Стоп при isStop: true, пауза при isStop: false
     case stopOrPause(isStop: Bool)
+
+    /// Изменение целевого количества калорий (1 калория за единицу)
     case setTargetedEnergy(UInt16)
+
+    /// Изменение целевого количества шагов (1 шаг за единицу)
     case setTargetedNumberOfSteps(UInt16)
+
+    /// Изменение целевого количества ступеней (1 ступень за единицу)
     case setTargetedNumberOfStrides(UInt16)
+
+    /// Изменение целевого дистанции (1 метр за единицу).
+    /// Тренажер принимает значение в UInt24, но в Swift нет такого типа данных.
+    /// Поэтому значение принимается в UInt32 и берутся первые 3 байта вмесето 4. Максимальное значение - 16777215
     case setTargetedDistance(UInt32)
     case setTargetedTrainingTime(UInt16)
     case setTargetedTimeInTwoHeartRateZones(timeInFatBurnZone: UInt16, timeInFitnessZone: UInt16)

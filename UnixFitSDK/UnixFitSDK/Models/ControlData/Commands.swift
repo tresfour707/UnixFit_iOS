@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Command {
+protocol Command {
     var data: Data { get }
     var parametersBytesArray: [UInt8] { get }
     var controlType: CommandType { get }

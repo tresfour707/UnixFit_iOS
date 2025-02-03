@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Значение статуса Spin Down.
 public struct SpinDownStatusValue {
     public let targetSpeedLow: UInt16
     public let targetSpeedHigh: UInt16

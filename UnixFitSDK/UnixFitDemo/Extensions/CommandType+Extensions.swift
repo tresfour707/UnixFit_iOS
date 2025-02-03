@@ -15,29 +15,29 @@ extension CommandType {
         case .reset:
             return "Reset"
         case .setTargetSpeed:
-            return "Set Target Speed"
+            return "Set Target Speed (0.01 km/h)"
         case .setTargetInclination:
-            return "Set Target Inclination"
+            return "Set Target Inclination (0.1 %)"
         case .setTargetResistance:
-            return "Set Target Resistance"
+            return "Set Target Resistance (0.1)"
         case .setTargetPower:
-            return "Set Target Power"
+            return "Set Target Power (1 W)"
         case .setTargetHeartRate:
-            return "Set Target Heart Rate"
+            return "Set Target Heart Rate (1 BPM)"
         case .startOrResume:
             return "Start or Resume"
         case .stopOrPause:
             return "Stop or Pause"
         case .setTargetedEnergy:
-            return "Set Targeted Energy"
+            return "Set Targeted Energy (1 Calorie)"
         case .setTargetedNumberOfSteps:
-            return "Set Targeted Number Of Steps"
+            return "Set Targeted Number Of Steps (1 Step)"
         case .setTargetedNumberOfStrides:
-            return "Set Targeted Number Of Strides"
+            return "Set Targeted Number Of Strides (1 Stride)"
         case .setTargetedDistance:
-            return "Set Targeted Distance"
+            return "Set Targeted Distance (1 m)"
         case .setTargetedTrainingTime:
-            return "Set Targeted Training Time"
+            return "Set Targeted Training Time (1 s)"
         case .setTargetedTimeInTwoHeartRateZones:
             return "Set Targeted Time In Two Heart Rate Zones"
         case .setTargetedTimeInThreeHeartRateZones:
@@ -47,11 +47,11 @@ extension CommandType {
         case .setIndoorBikeSimulationParameters:
             return "Set Indoor Bike Simulation Parameters"
         case .setWheelCircumference:
-            return "Set Wheel Circumference"
+            return "Set Wheel Circumference (0.1 mm)"
         case .spinDownControl:
             return "Spin Down Control"
         case .setTargetedCadence:
-            return "Set Targeted Cadence"
+            return "Set Targeted Cadence (0.5 1/minute)"
         @unknown default:
             return "Unknown"
         }

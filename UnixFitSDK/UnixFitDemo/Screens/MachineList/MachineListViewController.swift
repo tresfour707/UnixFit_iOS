@@ -76,7 +76,7 @@ final class MachineListViewController: UIViewController {
     }
 
     private func presentAlert(_ alert: UIAlertController) {
-        present(alert, animated: true)
+        self.present(alert, animated: true)
     }
 
     private func openCommandsScreen() {
@@ -86,15 +86,11 @@ final class MachineListViewController: UIViewController {
     }
 
     private func reloadData() {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+        tableView.reloadData()
     }
 
     private func stopAnimating() {
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
-        }
+        activityIndicator.stopAnimating()
     }
 
     // MARK: - Actions
@@ -147,9 +143,7 @@ extension MachineListViewController: BluetoothManagerDelegate {
         stopAnimating()
         bluetoothManager.stopScanningForPeripherals()
         reloadData()
-        DispatchQueue.main.async {
-            self.openCommandsScreen()
-        }
+        openCommandsScreen()
     }
     
     func bluetoothManagerDidDisconnectPeripheral(_ peripheralModel: UnixFitSDK.PeripheralModel) {

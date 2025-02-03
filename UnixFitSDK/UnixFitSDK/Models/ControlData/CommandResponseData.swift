@@ -7,9 +7,15 @@
 
 import Foundation
 
+/// Структура ответа тренажера на отправленную команду.
 public struct CommandResponseData {
+    /// Отправленная команда
     public var requestCommand: CommandType?
+
+    /// Код результата
     public var resultCode: CommandResponseResultCode?
+
+    /// Значение статуса Spin Down.  Если была отправлена команда SpinDownControl и она завершилась успешно, здесь может быть значение.
     public var spinDownStatusValue: SpinDownStatusValue?
 }
 
@@ -18,7 +24,7 @@ extension CommandResponseData {
         var fields = Fields<UInt8>(data)
         requestCommand = CommandType(rawValue: fields.get())
         resultCode = CommandResponseResultCode(rawValue: fields.get())
-        if requestCommand == .spinDownControl, resultCode == .success {
+        if requestCommand == .spinDownControl, resultCode == .success, fields.data.count > 3 {
             let targetSpeedLow: UInt16 = fields.get()
             let targetSpeedHigh: UInt16 = fields.get()
             spinDownStatusValue = SpinDownStatusValue(targetSpeedLow: targetSpeedLow, targetSpeedHigh: targetSpeedHigh)

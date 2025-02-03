@@ -51,9 +51,13 @@ struct SupportedFTMSFeaturesDataOptions: OptionSet {
     static let userDataRetentionSupported = SupportedFTMSFeaturesDataOptions(rawValue: 1 << 16)
 }
 
+/// Информация об поддерживаемых командах и возвращаемых данных
 public struct FTMSFeaturesData {
-    var supportedFeaturesList: [SupportedFTMSFeature]
-    var supportedCommandsList: [CommandType]
+    /// Список полей данных, которые поддерживает тренажер
+    public var supportedFeaturesList: [SupportedFTMSFeature]
+
+    /// Список команд, которые поддерживает тренажер
+    public var supportedCommandsList: [CommandType]
 }
 
 extension FTMSFeaturesData {

@@ -179,7 +179,7 @@ final class MachineCommandsVC: UIViewController {
             }
 
         case .setTargetedTimeInTwoHeartRateZones:
-            inputVC.update(with: ["timeInFatBurnZone", "timeInFitnessZone"]) { [weak self] values in
+            inputVC.update(with: ["timeInFatBurnZone (1s)", "timeInFitnessZone (1s)"]) { [weak self] values in
                 var timeInFatBurnZone = UInt16(0)
                 var timeInFitnessZone = UInt16(0)
                 for i in 0..<values.count {
@@ -202,7 +202,7 @@ final class MachineCommandsVC: UIViewController {
             }
 
         case .setTargetedTimeInThreeHeartRateZones:
-            inputVC.update(with: ["timeInLightZone", "timeInModerateZone", "timeInHardZone"]) { [weak self] values in
+            inputVC.update(with: ["timeInLightZone (1s)", "timeInModerateZone (1s)", "timeInHardZone (1s)"]) { [weak self] values in
                 var timeInLightZone = UInt16(0)
                 var timeInModerateZone = UInt16(0)
                 var timeInHardZone = UInt16(0)
@@ -233,11 +233,11 @@ final class MachineCommandsVC: UIViewController {
         case .setTargetedTimeInFiveHeartRateZones:
             inputVC.update(
                 with: [
-                    "timeInVeryLightZone",
-                    "timeInLightZone",
-                    "timeInModerateZone",
-                    "timeInHardZone",
-                    "timeInMaximumZone"
+                    "timeInVeryLightZone (1s)",
+                    "timeInLightZone (1s)",
+                    "timeInModerateZone (1s)",
+                    "timeInHardZone (1s)",
+                    "timeInMaximumZone (1s)"
                 ]
             ) { [weak self] values in
                 var timeInVeryLightZone = UInt16(0)
@@ -279,10 +279,10 @@ final class MachineCommandsVC: UIViewController {
         case .setIndoorBikeSimulationParameters:
             inputVC.update(
                 with: [
-                    "windSpeed",
-                    "grade",
-                    "crr",
-                    "cw"
+                    "windSpeed (0.001 m/s)",
+                    "grade (0.1 %)",
+                    "crr (0.0001)",
+                    "cw (0.01)"
                 ]
             ) { [weak self] values in
                 var windSpeed = Int16(0)
@@ -420,7 +420,7 @@ extension MachineCommandsVC: UITableViewDelegate, UITableViewDataSource {
         case .spinDownControl:
             let cell = tableView.dequeueCell(withType: TwoButtonsCell.self, for: indexPath)
             cell.update(
-                firstButtonTitle: "Start",
+                firstButtonTitle: "Start SpinDown",
                 secondButtonTitle: "Ignore",
                 onFirstButtonTouched: { [weak self] in
                     self?.activeSessionManager.send(commandWithValue: .spinDownControl(.start))
@@ -479,22 +479,41 @@ extension MachineCommandsVC: SessionManagerDelegate {
         let commandResponse = "Command Response: \(requestCommand) command result: \(resultCode)"
         saveToLogs(commandResponse)
     }
-
-    func sessionManagerDidFetchDeviceData(_ deviceData: UnixFitSDK.DeviceData) {
-    }
     
     func sessionManagerDidChangeTrainingStatus(_ trainingStatus: UnixFitSDK.TrainingStatusData) {
         let trainingStatusString = "Training Status: \(trainingStatus.statusType.title)"
         saveToLogs(trainingStatusString)
-
-        DispatchQueue.main.async {
-            self.setTrainingStatus(trainingStatus.statusType.title)
-        }
+        setTrainingStatus(trainingStatus.statusType.title)
     }
 
     func sessionManagerDidFetchFTMSFeatures(_ features: FTMSFeaturesData) {
         let featuresString = "FTMSFeatures: \(features)"
         saveToLogs(featuresString)
+    }
+
+    func sessionManagerDidRecieveSupportedSpeedRange(_ supportedSpeedRange: SupportedSpeedRange) {
+        let speedRangeString = "Supported Speed Range: \(supportedSpeedRange)"
+        saveToLogs(speedRangeString)
+    }
+
+    func sessionManagerDidRecieveSupportedPowerRange(_ supportedPowerRange: SupportedPowerRange) {
+        let powerRangeString = "Supported Power Range: \(supportedPowerRange)"
+        saveToLogs(powerRangeString)
+    }
+
+    func sessionManagerDidRecieveSupportedInclinationRange(_ supportedInclinationRange: SupportedInclinationRange) {
+        let inclinationRangeString = "Supported Inclination Range: \(supportedInclinationRange)"
+        saveToLogs(inclinationRangeString)
+    }
+
+    func sessionManagerDidRecieveSupportedHeartRateRange(_ supportedHeartRate: SupportedHeartRateRange) {
+        let heartRateRangeString = "Supported Heart Rate Range: \(supportedHeartRate)"
+        saveToLogs(heartRateRangeString)
+    }
+
+    func sessionManagerDidRecieveSupportedResistanceLevelRange(_ supportedResistanceLevelRange: SupportedResistanceLevelRange) {
+        let resistanceLevelRangeString = "Supported Resistance Level Range: \(supportedResistanceLevelRange)"
+        saveToLogs(resistanceLevelRangeString)
     }
 }
 
