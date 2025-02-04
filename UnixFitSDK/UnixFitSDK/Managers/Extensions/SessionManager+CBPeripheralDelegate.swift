@@ -21,17 +21,6 @@ extension SessionManager: CBPeripheralDelegate {
             case FTMSCharacteristic.FTMSControlPoint.uuid:
                 save(controlCharacteristic: characteristic)
 
-            case FTMSCharacteristic.crossTrainerData.uuid,
-                FTMSCharacteristic.indoorBike.uuid,
-                FTMSCharacteristic.rowerData.uuid,
-                FTMSCharacteristic.stairClimber.uuid,
-                FTMSCharacteristic.stepClimber.uuid,
-                FTMSCharacteristic.treadmillData.uuid:
-                if characteristic.value == nil {
-                    return
-                }
-                peripheral.readValue(for: characteristic)
-
             default:
                 peripheral.readValue(for: characteristic)
             }
