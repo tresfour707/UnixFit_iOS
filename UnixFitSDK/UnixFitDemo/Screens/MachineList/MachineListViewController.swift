@@ -9,12 +9,21 @@ import UIKit
 import UnixFitSDK
 
 final class MachineListViewController: UIViewController {
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refreshDevices), for: .valueChanged)
+
+        return refreshControl
+    }()
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
-        
+        tableView.addSubview(refreshControl)
+
         tableView.register(MachineListCell.self)
 
         return tableView
@@ -100,6 +109,15 @@ final class MachineListViewController: UIViewController {
         }
         bluetoothManager.disconnect(peripheralModel: peripheralModel)
     }
+
+    @objc private func refreshDevices() {
+        bluetoothManager.stopScanningForPeripherals()
+        bluetoothManager.deleteStoredPeripherals()
+        tableView.reloadData()
+
+        bluetoothManager.scanForPeripherals()
+        refreshControl.endRefreshing()
+    }
 }
 
 extension MachineListViewController: BluetoothManagerDelegate {
@@ -166,7 +184,9 @@ extension MachineListViewController: UITableViewDelegate, UITableViewDataSource 
         let peripheralModel = bluetoothManager.peripheralModels[indexPath.row]
         let cell = tableView.dequeueCell(withType: MachineListCell.self, for: indexPath)
         cell.backgroundColor = peripheralModel.id == bluetoothManager.activeSessionManager?.peripheralModel.id ? .green : .white
-        cell.update(title: peripheralModel.name)
+
+        let title = peripheralModel.name.map { "\($0), flags: \(peripheralModel.deviceFlags)" }
+        cell.update(title: title)
 
         return cell
     }

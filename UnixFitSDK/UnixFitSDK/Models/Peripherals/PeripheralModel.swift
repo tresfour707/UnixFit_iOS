@@ -16,7 +16,16 @@ public struct PeripheralModel {
         peripheral.name
     }
 
-    let peripheral: CBPeripheral
-    let advertisementData: [String : Any]
-    let rssi: NSNumber
+    public var deviceFlags: [UInt8] {
+        let serviceDictionary = advertisementData["kCBAdvDataServiceData"] as? [CBUUID: NSData]
+        let data = serviceDictionary?[FTMSCharacteristic.serviceFTMS.uuid]
+        let flags = data.map { [UInt8]($0) } ?? []
+        let zeroCountToAppend = 6 - flags.count
+
+        return Array(repeating: 0, count: zeroCountToAppend) + flags
+    }
+
+    public let peripheral: CBPeripheral
+    public let advertisementData: [String : Any]
+    public let rssi: NSNumber
 }

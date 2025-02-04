@@ -515,6 +515,25 @@ extension MachineCommandsVC: SessionManagerDelegate {
         let resistanceLevelRangeString = "Supported Resistance Level Range: \(supportedResistanceLevelRange)"
         saveToLogs(resistanceLevelRangeString)
     }
+
+    func sessionManagerDidFetchDeviceData(_ deviceData: DeviceData) {
+        switch deviceData {
+        case .crossTrainer:
+            saveToLogs("Cross trainer data received")
+        case .indoorBike:
+            saveToLogs("Indoor bike data received")
+        case .rower:
+            saveToLogs("Rower data received")
+        case .stairClimber:
+            saveToLogs("Stair climber data received")
+        case .stepClimber:
+            saveToLogs("Step climber data received")
+        case .treadmill:
+            saveToLogs("Treadmill data received")
+        @unknown default:
+            saveToLogs("Unknown data received")
+        }
+    }
 }
 
 enum MachineCommandsSectionType: Int, CaseIterable {

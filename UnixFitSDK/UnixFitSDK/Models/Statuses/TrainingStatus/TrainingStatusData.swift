@@ -21,7 +21,11 @@ public struct TrainingStatusData {
 extension TrainingStatusData {
     init(from data: Data) {
         var fields = Fields<UInt8>(data)
-        let statusByte: UInt8 = fields.get()
-        statusType = TrainingStatusType(rawValue: statusByte) ?? .other
+        if data.count > 1 {
+            let statusByte: UInt8 = fields.get()
+            statusType = TrainingStatusType(rawValue: statusByte) ?? .other
+        } else {
+            statusType = .other
+        }
     }
 }

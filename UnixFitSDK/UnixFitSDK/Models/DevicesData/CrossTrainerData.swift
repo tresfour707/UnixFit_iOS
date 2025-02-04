@@ -73,14 +73,14 @@ extension CrossTrainerRawData {
 
         strideCount = options.contains(.strideCount) ? fields.get() : nil
 
-        if options.contains(.inclinationAndAngle) {
-            inclination = fields.get()
-            rampAngleSetting = fields.get()
-        }
-
         if options.contains(.elevationGain) {
             positiveElevationGain = fields.get()
             negativeElevationGain = fields.get()
+        }
+
+        if options.contains(.inclinationAndAngle) {
+            inclination = fields.get()
+            rampAngleSetting = fields.get()
         }
 
         resistanceLevel = options.contains(.resistanceLevel) ? fields.get() : nil
@@ -89,8 +89,12 @@ extension CrossTrainerRawData {
 
         if options.contains(.expendedEnergy) {
             totalEnergy = fields.get()
-            energyPerHour = fields.get()
-            energyPerMinute = fields.get()
+            
+            let energyPerHour: UInt16 = fields.get()
+            self.energyPerHour = energyPerHour == 0xFFFF ? nil : energyPerHour
+
+            let energyPerMinute: UInt8 = fields.get()
+            self.energyPerMinute = energyPerMinute == 0xFF ? nil : energyPerMinute
         }
 
         heartRate = options.contains(.heartRate) ? fields.get() : nil

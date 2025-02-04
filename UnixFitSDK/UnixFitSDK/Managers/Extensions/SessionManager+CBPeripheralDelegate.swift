@@ -1,5 +1,5 @@
 //
-//  BluetoothManager+CBPeripheralDelegate.swift
+//  SessionManager+CBPeripheralDelegate.swift
 //  UnixFitSDK
 //
 //  Created by Dmitriy Mamatov on 27.12.2024.
@@ -10,19 +10,27 @@ import CoreBluetooth
 extension SessionManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
-        print("[CBPeripheralDelegate] did discover services", services)
         for service in services {
             peripheral.discoverCharacteristics(nil, for: service)
         }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        print("[CBPeripheralDelegate] did discover FTMS characteristic", service.characteristics ?? "")
-
         service.characteristics?.forEach { characteristic in
             switch characteristic.uuid {
             case FTMSCharacteristic.FTMSControlPoint.uuid:
                 save(controlCharacteristic: characteristic)
+
+            case FTMSCharacteristic.crossTrainerData.uuid,
+                FTMSCharacteristic.indoorBike.uuid,
+                FTMSCharacteristic.rowerData.uuid,
+                FTMSCharacteristic.stairClimber.uuid,
+                FTMSCharacteristic.stepClimber.uuid,
+                FTMSCharacteristic.treadmillData.uuid:
+                if characteristic.value == nil {
+                    return
+                }
+                peripheral.readValue(for: characteristic)
 
             default:
                 peripheral.readValue(for: characteristic)
@@ -33,7 +41,6 @@ extension SessionManager: CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
-        print("[CBPeripheralDelegate] did update value", descriptor)
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -122,6 +129,5 @@ extension SessionManager: CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverIncludedServicesFor service: CBService, error: (any Error)?) {
-        print(service)
     }
 }
