@@ -14,7 +14,9 @@ struct TrainingStatusDataOptions: OptionSet {
     static let extendedStringPresent = TrainingStatusDataOptions(rawValue: 1 << 1)
 }
 
+/// Структура со статусом тренировки
 public struct TrainingStatusData {
+    /// Статус тренировки
     public var statusType: TrainingStatusType
 }
 

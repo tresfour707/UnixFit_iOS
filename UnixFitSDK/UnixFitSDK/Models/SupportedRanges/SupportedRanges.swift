@@ -7,9 +7,15 @@
 
 import Foundation
 
+/// Поддерживаемые значения скорости
 public struct SupportedSpeedRange {
+    /// Минимальное значение
     public let minSpeed: UInt16
+
+    /// Максимальное значение
     public let maxSpeed: UInt16
+
+    /// Минимальный шаг значения
     public let minIncrement: UInt16
 }
 
@@ -22,9 +28,15 @@ extension SupportedSpeedRange {
     }
 }
 
+/// Поддерживаемые значения наклона
 public struct SupportedInclinationRange {
+    /// Минимальное значение
     public let minInclination: Int16
+
+    /// Максимальное значение
     public let maxInclination: Int16
+
+    /// Минимальный шаг значения
     public let minIncrement: UInt16
 }
 
@@ -37,9 +49,15 @@ extension SupportedInclinationRange {
     }
 }
 
+/// Поддерживаемые значения мощности
 public struct SupportedPowerRange {
+    /// Минимальное значение
     public let minPower: Int16
+
+    /// Максимальное значение
     public let maxPower: Int16
+
+    /// Минимальный шаг значения
     public let minIncrement: UInt16
 }
 
@@ -52,9 +70,15 @@ extension SupportedPowerRange {
     }
 }
 
+/// Поддерживаемые значения сердечного ритма
 public struct SupportedHeartRateRange {
+    /// Минимальное значение
     public let minHeartRate: UInt8
+
+    /// Максимальное значение
     public let maxHeartRate: UInt8
+
+    /// Минимальный шаг значения
     public let minIncrement: UInt8
 }
 
@@ -67,9 +91,15 @@ extension SupportedHeartRateRange {
     }
 }
 
+/// Поддерживаемые значения сопротивления
 public struct SupportedResistanceLevelRange {
+    /// Минимальное значение
     public let minResistanceLevel: Int16
+
+    /// Максимальное значение
     public let maxResistanceLevel: Int16
+
+    /// Минимальный шаг значения
     public let minIncrement: UInt16
 }
 

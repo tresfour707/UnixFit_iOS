@@ -1,0 +1,6 @@
+framework module UnixFitSDK {
+  umbrella header "UnixFitSDK.h"
+  export *
+
+  module * { export * }
+}

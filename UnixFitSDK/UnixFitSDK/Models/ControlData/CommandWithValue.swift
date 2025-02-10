@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Список команд для отправки на тренажер
+/// Команды  для отправки на тренажер
 public enum CommandWithValue {
     /// Получение контроля над тренажером
     case requestControl
@@ -36,32 +36,52 @@ public enum CommandWithValue {
     /// Стоп при isStop: true, пауза при isStop: false
     case stopOrPause(isStop: Bool)
 
-    /// Изменение целевого количества калорий (1 калория за единицу)
+    /// Изменение целевого количества калорий (1 ккал за единицу)
     case setTargetedEnergy(UInt16)
 
     /// Изменение целевого количества шагов (1 шаг за единицу)
     case setTargetedNumberOfSteps(UInt16)
 
-    /// Изменение целевого количества ступеней (1 ступень за единицу)
+    /// Изменение целевого количества шагов (1 шаг за единицу)
     case setTargetedNumberOfStrides(UInt16)
 
     /// Изменение целевого дистанции (1 метр за единицу).
     /// Тренажер принимает значение в UInt24, но в Swift нет такого типа данных.
-    /// Поэтому значение принимается в UInt32 и берутся первые 3 байта вмесето 4. Максимальное значение - 16777215
+    /// Поэтому значение принимается в UInt32, максимальное значение - 16777215
     case setTargetedDistance(UInt32)
+
+    /// Изменение целевого времени тренировки (1 секунда за единицу)
     case setTargetedTrainingTime(UInt16)
+
+    /// Изменение целевого времени тренировки в двух зонах сердечного ритма (1 секунда за единицу)
     case setTargetedTimeInTwoHeartRateZones(timeInFatBurnZone: UInt16, timeInFitnessZone: UInt16)
+
+    /// Изменение целевого времени тренировки в трех зонах сердечного ритма (1 секунда за единицу)
     case setTargetedTimeInThreeHeartRateZones(timeInLightZone: UInt16,
                                               timeInModerateZone: UInt16,
                                               timeInHardZone: UInt16)
+
+    /// Изменение целевого времени тренировки в пяти зонах сердечного ритма (1 секунда за единицу)
     case setTargetedTimeInFiveHeartRateZones(timeInVeryLightZone: UInt16,
                                              timeInLightZone: UInt16,
                                              timeInModerateZone: UInt16,
                                              timeInHardZone: UInt16,
                                              timeInMaximumZone: UInt16)
+
+    /// Настройка симуляции условий для байка
+    /// Wind Speed - скорость ветра (0.001 м/c за секунду)
+    /// Grade - Уровень (0.01% за единицу)
+    /// Crr - Коэффициент трения качения (rolling resistance) (0.0001 за единицу)
+    /// Cw - Коэффициент сопротивления ветра (0.01 за единицу)
     case setIndoorBikeSimulationParameters(windSpeed: Int16, grade: Int16, crr: UInt8, cw: UInt8)
+
+    /// Настройка длины окружности колеса (0.1 мм за единицу)
     case setWheelCircumference(UInt16)
+
+    /// Калибровка
     case spinDownControl(SpinDownControlParameterType)
+
+    /// Изменение целевого каденса (0.5 1/м за единицу)
     case setTargetedCadence(UInt16)
 
     func createCommand() -> Command {

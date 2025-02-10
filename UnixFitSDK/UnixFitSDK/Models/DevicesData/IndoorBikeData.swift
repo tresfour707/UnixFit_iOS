@@ -25,21 +25,51 @@ struct IndoorBikeDataOptions: OptionSet {
     static let remainingTime = IndoorBikeDataOptions(rawValue: 1 << 12)
 }
 
+/// Данные велотренажера
 public struct IndoorBikeRawData {
+    /// Текущая скорость (0.01 км/ч за единицу)
     public var instantaneousSpeed: UInt16?
+
+    /// Средняя скорость (0.01 км/ч за единицу)
     public var averageSpeed: UInt16?
+
+    /// Текущий каденс (0.5 1/м за единицу)
     public var instantaneousCadence: UInt16?
+
+    /// Средний каденс (0.5 1/м за единицу)
     public var averageCadence: UInt16?
+
+    /// Общая дистанция (1м за единицу)
     public var totalDistance: UInt32?
+
+    /// Уровень сопротивления (0.1 за единицу)
     public var resistanceLevel: Int16?
+
+    /// Текущая мощность (1 W за единицу)
     public var instantaneousPower: Int16?
+
+    /// Средняя мощность (1 W за единицу)
     public var averagePower: Int16?
+
+    /// Текущая расход калорий (1 ккал за единицу)
     public var totalEnergy: UInt16?
+
+    /// Расход за час (1 ккал в час за единицу)
     public var energyPerHour: UInt16?
+
+    /// Расход за минуту (1 ккал в в минуту за единицу)
     public var energyPerMinute: UInt8?
+
+    /// Сердечный ритм (1 BPM  за единицу)
     public var heartRate: UInt8?
+
+    /// Метаболический эквивалент (1  за единицу)
     public var metabolicEquivalent: UInt8?
+
+    /// Текущее время тренировки (1 с за единицу)
     public var elapsedTime: UInt16?
+
+    /// Оставшееся время тренировки (1 с за единицу)
     public var remainingTime: UInt16?
 }
 

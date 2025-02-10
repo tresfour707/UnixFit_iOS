@@ -9,28 +9,73 @@ import Foundation
 
 /// Статус тренажера. Опционален, может не поддерживаться тренажером.
 public enum FTMSStatus {
+    /// Неизвестный статус
     case unknown
+
+    /// Сброс
     case reset
+
+    /// Тренировка прекращена или остановлена юзером
     case stoppedOrPausedByUser(isStopped: Bool)
+
+    /// Тренировка прекращена или остановлена при помощи ключа безопасности
     case stoppedBySafetyKey
+
+    /// Тренировка начата или продолжена юзером
     case startedOrResumedByUser
+
+    /// Скорость изменена
     case targetSpeedChanged(UInt16)
+
+    /// Наклон изменен
     case targetInclineChanged(Int16)
+
+    /// Сопротивление изменено
     case targetResistanceChanged(Int16)
+
+    /// Мощность изменена
     case targetPowerChanged(Int16)
+
+    /// Изменен целевой сердечный ритм
     case targetHeartRateChanged(UInt8)
+
+    /// Изменена целевая энергия
     case targetedExpendedEnergyChanged(UInt16)
+
+    /// Изменено целевое количество шагов
     case targetedNumberOfStepsChanged(UInt16)
+
+    /// Изменено целевое количество шагов
     case targetedNumberOfStridesChanged(UInt16)
+
+    /// Изменена целевая дистанция
     case targetedDistanceChanged(UInt32)
+
+    /// Изменено целевое время тренировки
     case targetedTrainingTimeChanged(UInt16)
+
+    /// Изменено целевое время тренировки в двух зонах сердечного ритма
     case targetedTimeInTwoHeartRateZonesChanged(TwoHeartRateZones)
+
+    /// Изменено целевое время тренировки в трех зонах сердечного ритма
     case targetedTimeInThreeHeartRateZonesChanged(ThreeHeartRateZones)
+
+    /// Изменено целевое время тренировки в пяти зонах сердечного ритма
     case targetedTimeInFiveHeartRateZonesChanged(FiveHeartRateZones)
+
+    /// Изменены параметры симуляции
     case indoorBikeSimulationParametersChanged(BikeSimulationParameters)
+
+    /// Изменена длина окружности колеса
     case wheelCircumferenceChanged(UInt16)
+
+    /// Статус калибровки
     case spinDownStatus(SpinDownStatusValue)
+
+    /// Изменен целевой каденс
     case targetedCadenceChanged(UInt16)
+
+    /// Потерян доступ к командам
     case controlPermissionLost
 
     init(data: Data) {

@@ -28,7 +28,6 @@ final class DeviceDataToStringConverter {
         resultStrings.append("Power Output: " + tryToConvertToString(treadmillData.powerOutput))
         resultStrings.append("Ramp Angle Setting: " + tryToConvertToString(treadmillData.rampAngleSetting))
         resultStrings.append("Remaining Time: " + tryToConvertToString(treadmillData.remainingTime))
-        resultStrings.append("Steps: " + tryToConvertToString(treadmillData.steps))
         resultStrings.append("Total Distance: " + tryToConvertToString(treadmillData.totalDistance))
         resultStrings.append("Total Energy: " + tryToConvertToString(treadmillData.totalEnergy))
 

@@ -1,0 +1,467 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
+// swift-module-flags: -target arm64-apple-ios15.6 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name UnixFitSDK
+import CoreBluetooth
+import Foundation
+import Swift
+@_exported import UnixFitSDK
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public protocol BluetoothManagerDelegate : AnyObject {
+  func bluetoothManagerDidFail(with error: UnixFitSDK.BluetoothError)
+  func bluetoothManagerDidReadyStateSwitched(_ isReady: Swift.Bool)
+  func bluetoothManagerDidDiscover(peripheralModel: UnixFitSDK.PeripheralModel)
+  func bluetoothManagerDidConnectToPeripheral(with peripheralModel: UnixFitSDK.PeripheralModel)
+  func bluetoothManagerDidDisconnectPeripheral(_ peripheralModel: UnixFitSDK.PeripheralModel)
+  func bluetoothManagerDidFailToConnectPeripheral(_ peripheralModel: UnixFitSDK.PeripheralModel, error: (any Swift.Error)?)
+}
+public protocol SessionManagerDelegate : AnyObject {
+  func sessionManagerDidFetchDeviceData(_ deviceData: UnixFitSDK.DeviceData)
+  func sessionManagerDidChangeTrainingStatus(_ trainingStatus: UnixFitSDK.TrainingStatusData)
+  func sessionManagerDidCompleteCommand(commandResponse: UnixFitSDK.CommandResponseData)
+  func sessionManagerDidFetchFTMSFeatures(_ features: UnixFitSDK.FTMSFeaturesData)
+  func sessionManagerDidRecieveFTMSStatus(_ ftmsStatus: UnixFitSDK.FTMSStatus)
+  func sessionManagerDidRecieveSupportedSpeedRange(_ supportedSpeedRange: UnixFitSDK.SupportedSpeedRange)
+  func sessionManagerDidRecieveSupportedInclinationRange(_ supportedInclinationRange: UnixFitSDK.SupportedInclinationRange)
+  func sessionManagerDidRecieveSupportedResistanceLevelRange(_ supportedResistanceLevelRange: UnixFitSDK.SupportedResistanceLevelRange)
+  func sessionManagerDidRecieveSupportedPowerRange(_ supportedPowerRange: UnixFitSDK.SupportedPowerRange)
+  func sessionManagerDidRecieveSupportedHeartRateRange(_ supportedHeartRate: UnixFitSDK.SupportedHeartRateRange)
+}
+extension UnixFitSDK.SessionManagerDelegate {
+  public func sessionManagerDidFetchDeviceData(_ deviceData: UnixFitSDK.DeviceData)
+  public func sessionManagerDidChangeTrainingStatus(_ trainingStatus: UnixFitSDK.TrainingStatusData)
+  public func sessionManagerDidCompleteCommand(commandResponse: UnixFitSDK.CommandResponseData)
+  public func sessionManagerDidFetchFTMSFeatures(_ features: UnixFitSDK.FTMSFeaturesData)
+  public func sessionManagerDidRecieveFTMSStatus(_ ftmsStatus: UnixFitSDK.FTMSStatus)
+  public func sessionManagerDidRecieveSupportedSpeedRange(_ supportedSpeedRange: UnixFitSDK.SupportedSpeedRange)
+  public func sessionManagerDidRecieveSupportedInclinationRange(_ supportedInclinationRange: UnixFitSDK.SupportedInclinationRange)
+  public func sessionManagerDidRecieveSupportedResistanceLevelRange(_ supportedResistanceLevelRange: UnixFitSDK.SupportedResistanceLevelRange)
+  public func sessionManagerDidRecieveSupportedPowerRange(_ supportedPowerRange: UnixFitSDK.SupportedPowerRange)
+  public func sessionManagerDidRecieveSupportedHeartRateRange(_ supportedHeartRate: UnixFitSDK.SupportedHeartRateRange)
+}
+extension UnixFitSDK.BluetoothManager : CoreBluetooth.CBCentralManagerDelegate {
+  @objc dynamic public func centralManagerDidUpdateState(_ central: CoreBluetooth.CBCentralManager)
+  @objc dynamic public func centralManager(_ central: CoreBluetooth.CBCentralManager, didConnect peripheral: CoreBluetooth.CBPeripheral)
+  @objc dynamic public func centralManager(_ central: CoreBluetooth.CBCentralManager, didDiscover peripheral: CoreBluetooth.CBPeripheral, advertisementData: [Swift.String : Any], rssi RSSI: Foundation.NSNumber)
+  @objc dynamic public func centralManager(_ central: CoreBluetooth.CBCentralManager, didDisconnectPeripheral peripheral: CoreBluetooth.CBPeripheral, error: (any Swift.Error)?)
+  @objc dynamic public func centralManager(_ central: CoreBluetooth.CBCentralManager, didFailToConnect peripheral: CoreBluetooth.CBPeripheral, error: (any Swift.Error)?)
+}
+public protocol BluetoothManaging : AnyObject {
+  var isReady: Swift.Bool { get }
+  var isScanning: Swift.Bool { get }
+  var peripheralModels: [UnixFitSDK.PeripheralModel] { get }
+  var activeSessionManager: (any UnixFitSDK.SessionManaging)? { get }
+  var outputQueue: Dispatch.DispatchQueue { get set }
+  func scanForPeripherals()
+  func stopScanningForPeripherals()
+  func connect(to peripheralModel: UnixFitSDK.PeripheralModel)
+  func connectToPeripheral(with id: Foundation.UUID)
+  func disconnect(peripheralModel: UnixFitSDK.PeripheralModel)
+  func deleteStoredPeripherals()
+}
+@objc public class BluetoothManager : ObjectiveC.NSObject, UnixFitSDK.BluetoothManaging {
+  public var isReady: Swift.Bool {
+    get
+    set
+  }
+  public var isScanning: Swift.Bool {
+    get
+  }
+  public var peripheralModels: [UnixFitSDK.PeripheralModel] {
+    get
+  }
+  public var activeSessionManager: (any UnixFitSDK.SessionManaging)? {
+    get
+    set
+  }
+  public var outputQueue: Dispatch.DispatchQueue
+  public init(delegate: any UnixFitSDK.BluetoothManagerDelegate)
+  @objc deinit
+  public func connect(to peripheralModel: UnixFitSDK.PeripheralModel)
+  public func connectToPeripheral(with id: Foundation.UUID)
+  public func disconnect(peripheralModel: UnixFitSDK.PeripheralModel)
+  public func scanForPeripherals()
+  public func stopScanningForPeripherals()
+  public func deleteStoredPeripherals()
+}
+public protocol SessionManaging : AnyObject {
+  var peripheralModel: UnixFitSDK.PeripheralModel { get }
+  var currentTrainingStatus: UnixFitSDK.TrainingStatusData? { get }
+  var currentDeviceData: UnixFitSDK.DeviceData? { get }
+  var outputQueue: Dispatch.DispatchQueue { get set }
+  func addDelegate(_ delegate: any UnixFitSDK.SessionManagerDelegate)
+  func removeDelegate(_ delegate: any UnixFitSDK.SessionManagerDelegate)
+  func send(commandWithValue: UnixFitSDK.CommandWithValue)
+}
+public struct CommandResponseData {
+  public var requestCommand: UnixFitSDK.CommandType?
+  public var resultCode: UnixFitSDK.CommandResponseResultCode?
+  public var spinDownStatusValue: UnixFitSDK.SpinDownStatusValue?
+}
+public enum CommandResponseResultCode : Swift.UInt8 {
+  case other
+  case success
+  case notSupported
+  case invalidParameter
+  case operationFailed
+  case controlNotPermitted
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum SpinDownControlParameterType : Swift.UInt8 {
+  case start
+  case ignore
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum CommandType : Swift.UInt8, Swift.CaseIterable {
+  case requestControl
+  case reset
+  case setTargetSpeed
+  case setTargetInclination
+  case setTargetResistance
+  case setTargetPower
+  case setTargetHeartRate
+  case startOrResume
+  case stopOrPause
+  case setTargetedEnergy
+  case setTargetedNumberOfSteps
+  case setTargetedNumberOfStrides
+  case setTargetedDistance
+  case setTargetedTrainingTime
+  case setTargetedTimeInTwoHeartRateZones
+  case setTargetedTimeInThreeHeartRateZones
+  case setTargetedTimeInFiveHeartRateZones
+  case setIndoorBikeSimulationParameters
+  case setWheelCircumference
+  case spinDownControl
+  case setTargetedCadence
+  public init?(rawValue: Swift.UInt8)
+  public typealias AllCases = [UnixFitSDK.CommandType]
+  public typealias RawValue = Swift.UInt8
+  nonisolated public static var allCases: [UnixFitSDK.CommandType] {
+    get
+  }
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum CommandWithValue {
+  case requestControl
+  case reset
+  case setTargetSpeed(Swift.UInt16)
+  case setTargetInclination(Swift.Int16)
+  case setTargetResistance(Swift.UInt8)
+  case setTargetPower(Swift.Int16)
+  case setTargetHeartRate(Swift.UInt8)
+  case startOrResume
+  case stopOrPause(isStop: Swift.Bool)
+  case setTargetedEnergy(Swift.UInt16)
+  case setTargetedNumberOfSteps(Swift.UInt16)
+  case setTargetedNumberOfStrides(Swift.UInt16)
+  case setTargetedDistance(Swift.UInt32)
+  case setTargetedTrainingTime(Swift.UInt16)
+  case setTargetedTimeInTwoHeartRateZones(timeInFatBurnZone: Swift.UInt16, timeInFitnessZone: Swift.UInt16)
+  case setTargetedTimeInThreeHeartRateZones(timeInLightZone: Swift.UInt16, timeInModerateZone: Swift.UInt16, timeInHardZone: Swift.UInt16)
+  case setTargetedTimeInFiveHeartRateZones(timeInVeryLightZone: Swift.UInt16, timeInLightZone: Swift.UInt16, timeInModerateZone: Swift.UInt16, timeInHardZone: Swift.UInt16, timeInMaximumZone: Swift.UInt16)
+  case setIndoorBikeSimulationParameters(windSpeed: Swift.Int16, grade: Swift.Int16, crr: Swift.UInt8, cw: Swift.UInt8)
+  case setWheelCircumference(Swift.UInt16)
+  case spinDownControl(UnixFitSDK.SpinDownControlParameterType)
+  case setTargetedCadence(Swift.UInt16)
+}
+public struct SpinDownStatusValue {
+  public let targetSpeedLow: Swift.UInt16
+  public let targetSpeedHigh: Swift.UInt16
+}
+public struct CrossTrainerRawData {
+  public var instantaneousSpeed: Swift.UInt16?
+  public var averageSpeed: Swift.UInt16?
+  public var totalDistance: Swift.UInt32?
+  public var stepPerMinute: Swift.UInt16?
+  public var averageStepRate: Swift.UInt16?
+  public var strideCount: Swift.UInt16?
+  public var inclination: Swift.Int16?
+  public var rampAngleSetting: Swift.Int16?
+  public var positiveElevationGain: Swift.UInt16?
+  public var negativeElevationGain: Swift.UInt16?
+  public var resistanceLevel: Swift.Int16?
+  public var instantaneousPower: Swift.Int16?
+  public var averagePower: Swift.Int16?
+  public var totalEnergy: Swift.UInt16?
+  public var energyPerHour: Swift.UInt16?
+  public var energyPerMinute: Swift.UInt8?
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivalent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16?
+  public var remainingTime: Swift.UInt16?
+  public var isBackwardDirection: Swift.Bool
+}
+public enum DeviceData {
+  case crossTrainer(UnixFitSDK.CrossTrainerRawData)
+  case indoorBike(UnixFitSDK.IndoorBikeRawData)
+  case rower(UnixFitSDK.RowerRawData)
+  case stairClimber(UnixFitSDK.StairClimberRawData)
+  case stepClimber(UnixFitSDK.StepClimberRawData)
+  case treadmill(UnixFitSDK.TreadmillRawData)
+}
+public struct IndoorBikeRawData {
+  public var instantaneousSpeed: Swift.UInt16?
+  public var averageSpeed: Swift.UInt16?
+  public var instantaneousCadence: Swift.UInt16?
+  public var averageCadence: Swift.UInt16?
+  public var totalDistance: Swift.UInt32?
+  public var resistanceLevel: Swift.Int16?
+  public var instantaneousPower: Swift.Int16?
+  public var averagePower: Swift.Int16?
+  public var totalEnergy: Swift.UInt16?
+  public var energyPerHour: Swift.UInt16?
+  public var energyPerMinute: Swift.UInt8?
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivalent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16?
+  public var remainingTime: Swift.UInt16?
+}
+extension UnixFitSDK.IndoorBikeRawData {
+  public init(from data: Foundation.Data)
+}
+public struct RowerRawData {
+  public var strokeRate: Swift.UInt8?
+  public var strokeCount: Swift.UInt16?
+  public var averageStrokeRate: Swift.UInt8?
+  public var totalDistance: Swift.UInt32?
+  public var instantaneousPace: Swift.UInt16?
+  public var averagePace: Swift.UInt16?
+  public var instantaneousPower: Swift.Int16?
+  public var averagePower: Swift.Int16?
+  public var resistanceLevel: Swift.Int16?
+  public var totalEnergy: Swift.UInt16?
+  public var energyPerHour: Swift.UInt16?
+  public var energyPerMinute: Swift.UInt8?
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivalent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16?
+  public var remainingTime: Swift.UInt16?
+}
+public struct StairClimberRawData {
+  public var floorsCount: Swift.UInt16?
+  public var stepPerMinute: Swift.UInt16?
+  public var averageStepRate: Swift.UInt16?
+  public var positiveElevationGain: Swift.UInt16?
+  public var strideCount: Swift.UInt16?
+  public var totalEnergy: Swift.UInt16?
+  public var energyPerHour: Swift.UInt16?
+  public var energyPerMinute: Swift.UInt8?
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivalent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16?
+  public var remainingTime: Swift.UInt16?
+}
+public struct StepClimberRawData {
+  public var floorsCount: Swift.UInt16?
+  public var stepCount: Swift.UInt16?
+  public var stepPerMinute: Swift.UInt16?
+  public var averageStepRate: Swift.UInt16?
+  public var positiveElevationGain: Swift.UInt16?
+  public var totalEnergy: Swift.UInt16?
+  public var energyPerHour: Swift.UInt16?
+  public var energyPerMinute: Swift.UInt8?
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivalent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16?
+  public var remainingTime: Swift.UInt16?
+}
+public struct TreadmillRawData {
+  public var instantaneousSpeed: Swift.UInt16?
+  public var averageSpeed: Swift.UInt16?
+  public var totalDistance: Swift.UInt32?
+  public var inclination: Swift.Int16?
+  public var rampAngleSetting: Swift.Int16?
+  public var positiveElevationGain: Swift.UInt16?
+  public var negativeElevationGain: Swift.UInt16?
+  public var instantaneousPace: Swift.UInt8?
+  public var averagePace: Swift.UInt8?
+  public var totalEnergy: Swift.UInt16?
+  public var energyPerHour: Swift.UInt16?
+  public var energyPerMinute: Swift.UInt8?
+  public var heartRate: Swift.UInt8?
+  public var metabolicEquivalent: Swift.UInt8?
+  public var elapsedTime: Swift.UInt16?
+  public var remainingTime: Swift.UInt16?
+  public var forceOnBelt: Swift.Int16?
+  public var powerOutput: Swift.Int16?
+}
+public enum BluetoothError : Swift.Error {
+  case unknown
+  case resetting
+  case unsupported
+  case unauthorized
+  case poweredOff
+  public static func == (a: UnixFitSDK.BluetoothError, b: UnixFitSDK.BluetoothError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct FTMSFeaturesData {
+  public var supportedFeaturesList: [UnixFitSDK.SupportedFTMSFeature]
+  public var supportedCommandsList: [UnixFitSDK.CommandType]
+}
+public enum SupportedFTMSFeature {
+  case averageSpeed
+  case cadence
+  case totalDistance
+  case inclination
+  case elevationGain
+  case pace
+  case stepCount
+  case resistanceLevel
+  case strideCount
+  case expendedEnergy
+  case heartRateMeasurement
+  case metabolicEquivalent
+  case elapsedTime
+  case remainingTime
+  case powerMeasurement
+  case forceOnBeltAndPowerOutput
+  case userDataRetention
+  public static func == (a: UnixFitSDK.SupportedFTMSFeature, b: UnixFitSDK.SupportedFTMSFeature) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum FTMSStatus {
+  case unknown
+  case reset
+  case stoppedOrPausedByUser(isStopped: Swift.Bool)
+  case stoppedBySafetyKey
+  case startedOrResumedByUser
+  case targetSpeedChanged(Swift.UInt16)
+  case targetInclineChanged(Swift.Int16)
+  case targetResistanceChanged(Swift.Int16)
+  case targetPowerChanged(Swift.Int16)
+  case targetHeartRateChanged(Swift.UInt8)
+  case targetedExpendedEnergyChanged(Swift.UInt16)
+  case targetedNumberOfStepsChanged(Swift.UInt16)
+  case targetedNumberOfStridesChanged(Swift.UInt16)
+  case targetedDistanceChanged(Swift.UInt32)
+  case targetedTrainingTimeChanged(Swift.UInt16)
+  case targetedTimeInTwoHeartRateZonesChanged(UnixFitSDK.TwoHeartRateZones)
+  case targetedTimeInThreeHeartRateZonesChanged(UnixFitSDK.ThreeHeartRateZones)
+  case targetedTimeInFiveHeartRateZonesChanged(UnixFitSDK.FiveHeartRateZones)
+  case indoorBikeSimulationParametersChanged(UnixFitSDK.BikeSimulationParameters)
+  case wheelCircumferenceChanged(Swift.UInt16)
+  case spinDownStatus(UnixFitSDK.SpinDownStatusValue)
+  case targetedCadenceChanged(Swift.UInt16)
+  case controlPermissionLost
+}
+public struct TwoHeartRateZones {
+  public let targetedTimeInFatBurnZone: Swift.UInt16
+  public let targetedTimeInFitnessZone: Swift.UInt16
+}
+public struct ThreeHeartRateZones {
+  public let targetedTimeInLightZone: Swift.UInt16
+  public let targetedTimeInModerateZone: Swift.UInt16
+  public let targetedTimeInHardZone: Swift.UInt16
+}
+public struct FiveHeartRateZones {
+  public let targetedTimeInVeryLightZone: Swift.UInt16
+  public let targetedTimeInLightZone: Swift.UInt16
+  public let targetedTimeInModerateZone: Swift.UInt16
+  public let targetedTimeInHardZone: Swift.UInt16
+  public let targetedTimeInMaximumZone: Swift.UInt16
+}
+public struct BikeSimulationParameters {
+  public let windSpeed: Swift.Int16
+  public let grade: Swift.Int16
+  public let crr: Swift.UInt8
+  public let cw: Swift.UInt8
+}
+public struct PeripheralModel {
+  public var id: Foundation.UUID {
+    get
+  }
+  public var name: Swift.String? {
+    get
+  }
+  public var deviceFlags: [Swift.UInt8] {
+    get
+  }
+  public let peripheral: CoreBluetooth.CBPeripheral
+  public let advertisementData: [Swift.String : Any]
+  public let rssi: Foundation.NSNumber
+}
+public struct TrainingStatusData {
+  public var statusType: UnixFitSDK.TrainingStatusType
+}
+public enum TrainingStatusType : Swift.UInt8 {
+  case other
+  case idle
+  case warmingUp
+  case lowIntensityInterval
+  case highIntensityInterval
+  case recoveryInterval
+  case isometric
+  case heartRateControl
+  case fitnessTest
+  case speedOutsideOfControlRegionLow
+  case speedOutsideOfControlRegionHigh
+  case coolDown
+  case wattControl
+  case manualMode
+  case preWorkout
+  case postWorkout
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public struct SupportedSpeedRange {
+  public let minSpeed: Swift.UInt16
+  public let maxSpeed: Swift.UInt16
+  public let minIncrement: Swift.UInt16
+}
+public struct SupportedInclinationRange {
+  public let minInclination: Swift.Int16
+  public let maxInclination: Swift.Int16
+  public let minIncrement: Swift.UInt16
+}
+public struct SupportedPowerRange {
+  public let minPower: Swift.Int16
+  public let maxPower: Swift.Int16
+  public let minIncrement: Swift.UInt16
+}
+public struct SupportedHeartRateRange {
+  public let minHeartRate: Swift.UInt8
+  public let maxHeartRate: Swift.UInt8
+  public let minIncrement: Swift.UInt8
+}
+public struct SupportedResistanceLevelRange {
+  public let minResistanceLevel: Swift.Int16
+  public let maxResistanceLevel: Swift.Int16
+  public let minIncrement: Swift.UInt16
+}
+extension UnixFitSDK.CommandResponseResultCode : Swift.Equatable {}
+extension UnixFitSDK.CommandResponseResultCode : Swift.Hashable {}
+extension UnixFitSDK.CommandResponseResultCode : Swift.RawRepresentable {}
+extension UnixFitSDK.SpinDownControlParameterType : Swift.Equatable {}
+extension UnixFitSDK.SpinDownControlParameterType : Swift.Hashable {}
+extension UnixFitSDK.SpinDownControlParameterType : Swift.RawRepresentable {}
+extension UnixFitSDK.CommandType : Swift.Equatable {}
+extension UnixFitSDK.CommandType : Swift.Hashable {}
+extension UnixFitSDK.CommandType : Swift.RawRepresentable {}
+extension UnixFitSDK.BluetoothError : Swift.Equatable {}
+extension UnixFitSDK.BluetoothError : Swift.Hashable {}
+extension UnixFitSDK.SupportedFTMSFeature : Swift.Equatable {}
+extension UnixFitSDK.SupportedFTMSFeature : Swift.Hashable {}
+extension UnixFitSDK.TrainingStatusType : Swift.Equatable {}
+extension UnixFitSDK.TrainingStatusType : Swift.Hashable {}
+extension UnixFitSDK.TrainingStatusType : Swift.RawRepresentable {}

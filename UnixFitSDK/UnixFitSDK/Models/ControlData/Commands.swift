@@ -201,6 +201,7 @@ struct SpinDownControlCommand: Command {
     }
 }
 
+/// Параметры калибровки
 public enum SpinDownControlParameterType: UInt8 {
     case start = 0x01
     case ignore = 0x02

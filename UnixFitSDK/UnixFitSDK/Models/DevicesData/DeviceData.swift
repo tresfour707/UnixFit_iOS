@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Перечисление, хранящее данные тренажеров разных типов
 public enum DeviceData {
     case crossTrainer(CrossTrainerRawData)
     case indoorBike(IndoorBikeRawData)

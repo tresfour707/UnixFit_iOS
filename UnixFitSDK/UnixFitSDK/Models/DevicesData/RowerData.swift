@@ -25,22 +25,54 @@ struct RowerDataOptions: OptionSet {
     static let remainingTime = RowerDataOptions(rawValue: 1 << 12)
 }
 
+/// Данные гребного тренажера
 public struct RowerRawData {
+    /// Темп гребли (0.5 гребков за минуту за единицу)
     public var strokeRate: UInt8?
+
+    /// Количество гребков (1 гребок за минуту за единицу)
     public var strokeCount: UInt16?
+
+    /// Средний темп гребли (0.5 гребков за минуту за единицу)
     public var averageStrokeRate: UInt8?
+
+    /// Общая дистанция (1 м за единицу)
     public var totalDistance: UInt32?
+
+    /// Текущий темп (1 с за единицу)
     public var instantaneousPace: UInt16?
+
+    /// Средний темп (1 с за единицу)
     public var averagePace: UInt16?
+
+    /// Текущая мощность (1 W за единицу)
     public var instantaneousPower: Int16?
+
+    /// Средняя мощность (1 W за единицу)
     public var averagePower: Int16?
+
+    /// Уровень сопротивления (0.1 за единицу)
     public var resistanceLevel: Int16?
+
+    /// Текущая расход калорий (1 ккал за единицу)
     public var totalEnergy: UInt16?
+
+    /// Расход за час (1 ккал в час за единицу)
     public var energyPerHour: UInt16?
+
+    /// Расход за минуту (1 ккал в в минуту за единицу)
     public var energyPerMinute: UInt8?
+
+    /// Сердечный ритм (1 BPM  за единицу)
     public var heartRate: UInt8?
+
+    /// Метаболический эквивалент (1  за единицу)
     public var metabolicEquivalent: UInt8?
+
+    /// Текущее время тренировки (1 с за единицу)
     public var elapsedTime: UInt16?
+
+    /// Оставшееся время тренировки (1 с за единицу)
     public var remainingTime: UInt16?
 }
 

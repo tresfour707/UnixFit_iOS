@@ -32,11 +32,23 @@ extension CommandResponseData {
     }
 }
 
+/// Результат отработки команды
 public enum CommandResponseResultCode: UInt8 {
+    /// Неизвестный код ответа
     case other = 0x00
+
+    /// Успешно
     case success = 0x01
+
+    /// Команда не поддерживается
     case notSupported = 0x02
+
+    /// Неправильный параметр
     case invalidParameter = 0x03
+
+    /// Не удалось выполнить команду
     case operationFailed = 0x04
+
+    /// Нет доступа к управлению тренажером
     case controlNotPermitted = 0x05
 }

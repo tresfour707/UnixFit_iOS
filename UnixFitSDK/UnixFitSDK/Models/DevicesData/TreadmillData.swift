@@ -23,29 +23,63 @@ struct TreadmillDataOptions: OptionSet {
     static let elapsedTime = TreadmillDataOptions(rawValue: 1 << 10)
     static let remainingTime = TreadmillDataOptions(rawValue: 1 << 11)
     static let forceOnBeltAndPowerOutput = TreadmillDataOptions(rawValue: 1 << 12)
-    static let steps = TreadmillDataOptions(rawValue: 1 << 13)
 }
 
+/// Данные беговой дорожки
 public struct TreadmillRawData {
+    /// Текущая скорость (0.01 км/ч за единицу)
     public var instantaneousSpeed: UInt16?
+
+    /// Средняя скорость (0.01 км/ч за единицу)
     public var averageSpeed: UInt16?
+
+    /// Общая дистанция (1м за единицу)
     public var totalDistance: UInt32?
+
+    /// Уровень наклона (0.1 % за единицу)
     public var inclination: Int16?
+
+    /// Наклон рампы (0.1 градус за единицу)
     public var rampAngleSetting: Int16?
+
+    /// Набор высоты (1 м за единицу)
     public var positiveElevationGain: UInt16?
+
+    /// Уменьшение высоты (1 м за единицу)
     public var negativeElevationGain: UInt16?
+
+    /// Текущий темп (0.1 км/м за единицу)
     public var instantaneousPace: UInt8?
+
+    /// Средний темп (0.1 км/м за единицу)
     public var averagePace: UInt8?
+
+    /// Текущая расход калорий (1 ккал за единицу)
     public var totalEnergy: UInt16?
+
+    /// Расход за час (1 ккал в час за единицу)
     public var energyPerHour: UInt16?
+
+    /// Расход за минуту (1 ккал в в минуту за единицу)
     public var energyPerMinute: UInt8?
+
+    /// Сердечный ритм (1 BPM  за единицу)
     public var heartRate: UInt8?
+
+    /// Метаболический эквивалент (1  за единицу)
     public var metabolicEquivalent: UInt8?
+
+    /// Текущее время тренировки (1 с за единицу)
     public var elapsedTime: UInt16?
+
+    /// Оставшееся время тренировки (1 с за единицу)
     public var remainingTime: UInt16?
+
+    /// Сила на ленту беговой дорожки (1 Н за единицу)
     public var forceOnBelt: Int16?
+
+    /// Выход мощности (1 W за единицу)
     public var powerOutput: Int16?
-    public var steps: UInt32?
 }
 
 extension TreadmillRawData {
@@ -94,7 +128,5 @@ extension TreadmillRawData {
             forceOnBelt = fields.get()
             powerOutput = fields.get()
         }
-
-        steps = options.contains(.steps) ? fields.get() : nil
     }
 }
