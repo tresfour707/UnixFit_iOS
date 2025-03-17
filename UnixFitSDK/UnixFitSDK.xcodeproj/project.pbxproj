@@ -41,13 +41,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		8E2560B22D09B1D0001B15FE /* Exceptions for "UnixFitSDK" folder in "UnixFitSDK" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			publicHeaders = (
-				UnixFitSDK.h,
-			);
-			target = 8E2560AA2D09B1D0001B15FE /* UnixFitSDK */;
-		};
 		8E2560CD2D09B53D001B15FE /* Exceptions for "UnixFitDemo" folder in "UnixFitDemo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -60,9 +53,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		8E2560AD2D09B1D0001B15FE /* UnixFitSDK */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				8E2560B22D09B1D0001B15FE /* Exceptions for "UnixFitSDK" folder in "UnixFitSDK" target */,
-			);
 			path = UnixFitSDK;
 			sourceTree = "<group>";
 		};
